@@ -42,55 +42,56 @@ function getOrCreateUser(userQuery) {
   console.log("Get or create user")
   // the "sub" field means "subject", which is a unique identifier for each user
   let userRef = db.collection("users").doc(userQuery.uid);
-  let user = userRef.get().then(userSnapshot => {
-    if (userSnapshot.exists) {
-      console.log("User exists");
-      return userSnapshot.data();
-    }
-    else {
-      let data = {
-        uid: userQuery.uid,
-        email: userQuery.email,
-        displayName: userQuery.displayName
-      };
-      let setUser = userRef.set(data)
-      .then((newUser) => newUser);
-      console.log("User Created");
-      return setUser;
-    }
-    return user;
-  });
+  let user = userRef.get()
+    .then(userSnapshot => {
+      if (userSnapshot.exists) {
+        console.log("User exists");
+        return userSnapshot.data();
+      }
+      else {
+        let data = {
+          uid: userQuery.uid,
+          email: userQuery.email,
+          displayName: userQuery.displayName
+        };
+        let setUser = userRef.set(data)
+          .then((newUser) => newUser);
+        console.log("User Created");
+        return setUser;
+      }
+      return user;
+    });
 }
 
-  // let user = admin.auth().getUser(userQuery.uid)
-  //   .then((existingUser) => {
-  //     console.log('Successfully found existing user:', existingUser.uid);
-  //     return existingUser;
-  //   })
-  //   // TODO: Fix this to check the right error code.
-  //   .catch(function(error) {
-  //     console.log("create user")
-  //     admin.auth().createUser({
-  //       uid: userQuery.uid,
-  //       email: userQuery.email,
-  //       displayName: userQuery.displayName
-  //     })
-  //     .then(function(newUser) {
-  //       // See the UserRecord reference doc for the contents of userRecord.
-  //       let userRef = db.collection('users').doc(userQuery.uid);
-  //       let setNewUser = userRef.set({
-  //         'uid': userQuery.uid,
-  //         'email': userQuery.email,
-  //         'displayName': userQuery.displayName
-  //       });
-  //       console.log('Successfully created new user:', newUser.uid);
-  //       return newUser;
-  //     })
-  //     .catch(function(error) {
-  //       console.log('Error creating new user:', error);
-  //     });
-  //   });
-// 
+//   let user = admin.auth().getUser(userQuery.uid)
+//     .then((existingUser) => {
+//       console.log('Successfully found existing user:', existingUser.uid);
+//       return existingUser;
+//     })
+//     // TODO: Fix this to check the right error code.
+//     .catch(function(error) {
+//       console.log("create user")
+//       admin.auth().createUser({
+//         uid: userQuery.uid,
+//         email: userQuery.email,
+//         displayName: userQuery.displayName
+//       })
+//       .then(function(newUser) {
+//         // See the UserRecord reference doc for the contents of userRecord.
+//         let userRef = db.collection('users').doc(userQuery.uid);
+//         let setNewUser = userRef.set({
+//           'uid': userQuery.uid,
+//           'email': userQuery.email,
+//           'displayName': userQuery.displayName
+//         });
+//         console.log('Successfully created new user:', newUser.uid);
+//         return newUser;
+//       })
+//       .catch(function(error) {
+//         console.log('Error creating new user:', error);
+//       });
+//     });
+
 //   return user
 // }
 
