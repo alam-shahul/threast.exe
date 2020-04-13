@@ -6,10 +6,8 @@
 //require("firebase/firestore");
 const admin = require('firebase-admin');
 
-let serviceAccount = require('/Users/anneouyang/Downloads/threast-website-firebase-adminsdk-d8u2g-4b2e26ad15.json');
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.applicationDefault(),
   databaseURL: 'https://threast-website.firebaseio.com'
 });
 
@@ -59,8 +57,8 @@ function getOrCreateUser(userQuery) {
         console.log("User Created");
         return setUser;
       }
-      return user;
     });
+  return user;
 }
 
 //   let user = admin.auth().getUser(userQuery.uid)
@@ -99,14 +97,15 @@ function login(req, res) {
   admin.auth().verifyIdToken(req.body.token)
     .then((decodedToken) => {
      // console.log(decodedToken);
-     // TODO: this seems jank, and stems from earlier jankiness. In particula,
+     // TODO: this seems jank, and stems from earlier jankiness. In particular,
      // this is the third time that I'm copying "email" and "displayName"...
+     // REVISION: It's probably fine; can delete this TODO
      let userQuery ={"uid": decodedToken.uid, "email": req.body.email, "displayName": req.body.displayName};
      return getOrCreateUser(userQuery);
     })
     .then((user) => {
       // persist user in the session
-      //console.log(user);
+      console.log(user);
       req.session.user = user;
       res.send(user);
     })
