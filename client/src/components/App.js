@@ -28,7 +28,7 @@ class App extends Component {
         projectId: "threast-website",
         storageBucket: "threast-website.appspot.com",
         messagingSenderId: "933380237825",
-        appId: "1:933380237825:web:3e4ccd069e65d4b8"
+        appId: "1:933380237825:web:874189b6c93cdefd"
     };
     this.state = {
       userId: undefined,

@@ -61,38 +61,6 @@ function getOrCreateUser(userQuery) {
   return user;
 }
 
-//   let user = admin.auth().getUser(userQuery.uid)
-//     .then((existingUser) => {
-//       console.log('Successfully found existing user:', existingUser.uid);
-//       return existingUser;
-//     })
-//     // TODO: Fix this to check the right error code.
-//     .catch(function(error) {
-//       console.log("create user")
-//       admin.auth().createUser({
-//         uid: userQuery.uid,
-//         email: userQuery.email,
-//         displayName: userQuery.displayName
-//       })
-//       .then(function(newUser) {
-//         // See the UserRecord reference doc for the contents of userRecord.
-//         let userRef = db.collection('users').doc(userQuery.uid);
-//         let setNewUser = userRef.set({
-//           'uid': userQuery.uid,
-//           'email': userQuery.email,
-//           'displayName': userQuery.displayName
-//         });
-//         console.log('Successfully created new user:', newUser.uid);
-//         return newUser;
-//       })
-//       .catch(function(error) {
-//         console.log('Error creating new user:', error);
-//       });
-//     });
-
-//   return user
-// }
-
 function login(req, res) {
   admin.auth().verifyIdToken(req.body.token)
     .then((decodedToken) => {

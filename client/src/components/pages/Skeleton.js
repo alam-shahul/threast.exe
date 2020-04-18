@@ -8,9 +8,6 @@ import "firebase/auth";
 import "../../utilities.css";
 import "./Skeleton.css";
 
-////TODO: REPLACE WITH YOUR OWN CLIENT_ID
-//const GOOGLE_CLIENT_ID = "933380237825-i4bbrsc26ho30qpkt4nhbht1q2vu8ne8.apps.googleusercontent.com";
-
 class Skeleton extends Component {
   constructor(props) {
     super(props);
