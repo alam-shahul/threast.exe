@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import NotFound from "./pages/NotFound.js";
-import Skeleton from "./pages/Skeleton.js";
+import Homepage from "./pages/Homepage.js";
 
 import { firebase } from '@firebase/app';
 import "firebase/auth";
@@ -17,67 +17,113 @@ import { get, post } from "../utilities";
  * Define the "App" component as a class.
  */
 
-class App extends Component {
-  // makes props available in this component
-  constructor(props) {
-    super(props);
-    var firebaseConfig = {
-        apiKey: "AIzaSyAvZsDdDGOyMaCHQcXsUDx-85yr9akOhgw",
-        authDomain: "threast-website.firebaseapp.com",
-        databaseURL: "https://threast-website.firebaseio.com",
-        projectId: "threast-website",
-        storageBucket: "threast-website.appspot.com",
-        messagingSenderId: "933380237825",
-        appId: "1:933380237825:web:874189b6c93cdefd"
-    };
-    this.state = {
-      userId: undefined,
-      firebaseApp: firebase.initializeApp(firebaseConfig)
-    };
+function App(props) {
+  var firebaseConfig = {
+    apiKey: "AIzaSyAvZsDdDGOyMaCHQcXsUDx-85yr9akOhgw",
+    authDomain: "threast-website.firebaseapp.com",
+    databaseURL: "https://threast-website.firebaseio.com",
+    projectId: "threast-website",
+    storageBucket: "threast-website.appspot.com",
+    messagingSenderId: "933380237825",
+    appId: "1:933380237825:web:874189b6c93cdefd"
+  };
+
+  if(!firebase.apps.length) {
+    var firebaseInit = firebase.initializeApp(firebaseConfig);
   }
 
-  componentDidMount() {
+  const [userId, setUserId] = useState(undefined);
+  const [firebaseApp, setFirebaseApp] = useState(firebaseInit);
+
+  useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) {
         // they are registed in the database, and currently logged in.
-        this.setState({ userId: user._id });
+        setUserId(user._id);
       }
     });
-  }
+  });
 
-  handleLogin = (res) => {
-    //console.log(`Logged in as ${res.displayName}`);
+  var handleLogin = (res) => {
+ //console.log(`Logged in as ${res.displayName}`);
     console.log(res);
     res.token.then((userToken) => {
       post("/api/login", { token: userToken, displayName: res.displayName, email: res.email }).then((user) => {
-        this.setState({ userId: user.uid });
-        console.log(this.state.userId);
+        setUserId(user.uid);
+        // console.log(userId);
         post("/api/initsocket", { socketid: socket.id });
       });
     });
   };
 
-  handleLogout = () => {
-    this.setState({ userId: undefined });
+  var handleLogout = () => {
+    setUserId(undefined);
     post("/api/logout");
   };
 
-  render() {
-    return (
-      <>
-        <Router>
-          <Skeleton
-            path="/"
-            handleLogin={this.handleLogin}
-            handleLogout={this.handleLogout}
-            userId={this.state.userId}
-            firebaseApp={this.state.firebaseApp}
-          />
-          <NotFound default />
-        </Router>
-      </>
-    );
-  }
+  return (
+	  <>
+		  <Router>
+		    <Homepage
+			    path="/"
+			    handleLogin={handleLogin}
+			    handleLogout={handleLogout}
+			    userId={userId}
+			    firebaseApp={firebaseApp}
+		    />
+		    <NotFound default />
+		  </Router>
+	  </>
+  );
 }
+
+
+// class App extends Component {
+  // makes props available in this component
+  // constructor(props) {
+  //   super(props);
+  //   var firebaseConfig = {
+  //   apiKey: "AIzaSyAvZsDdDGOyMaCHQcXsUDx-85yr9akOhgw",
+  //   authDomain: "threast-website.firebaseapp.com",
+  //   databaseURL: "https://threast-website.firebaseio.com",
+  //   projectId: "threast-website",
+  //   storageBucket: "threast-website.appspot.com",
+  //   messagingSenderId: "933380237825",
+  //   appId: "1:933380237825:web:874189b6c93cdefd"
+  //   };
+  //   this.state = {
+  //   userId: undefined,
+  //   firebaseApp: firebase.initializeApp(firebaseConfig)
+  //   };
+  // }
+
+  // componentDidMount() {
+  //   get("/api/whoami").then((user) => {
+  //   if (user._id) {
+  //   // they are registed in the database, and currently logged in.
+  //   this.setState({ userId: user._id });
+  //   }
+  //   });
+  // }
+
+
+
+//   render() {
+//   return (
+//   <>
+//   <Router>
+//     <Homepage
+//     path="/"
+//     handleLogin={this.handleLogin}
+//     handleLogout={this.handleLogout}
+//     userId={this.state.userId}
+//     firebaseApp={this.state.firebaseApp}
+//     />
+//     <NotFound default />
+//   </Router>
+//   </>
+//   );
+//   }
+// }
 
 export default App;
