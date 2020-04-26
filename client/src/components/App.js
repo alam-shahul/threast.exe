@@ -3,6 +3,7 @@ import { Router } from "@reach/router";
 import NotFound from "./pages/NotFound.js";
 import Homepage from "./pages/Homepage.js";
 import Art from "./pages/Art.js";
+import Create from "./pages/Create.js";
 import People from "./pages/People.js";
 import Profile from "./pages/Profile.js";
 import SignIn from "./pages/SignIn.js";
@@ -61,8 +62,9 @@ function App(props) {
   };
 
   var handleLogout = () => {
-    setUserId(undefined);
-    post("/api/logout");
+    post("/api/logout").then(() => {
+      setUserId(null);
+    });
   };
 
   return (
@@ -77,6 +79,9 @@ function App(props) {
 		    />
         <Art 
           path = "/art"
+        />
+        <Create
+          path = "/create"
         />
         <People 
           path = "/people"

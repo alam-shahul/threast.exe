@@ -21,6 +21,12 @@ const router = express.Router();
 //initialize socket
 const socket = require("./server-socket");
 
+// import Firebase functionality
+const admin = require("./firebaseAdmin");
+
+const stream = require("stream"); 
+
+
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
@@ -41,6 +47,16 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
+
+router.post("/create", (req, res, next) => {
+  if (!req.user) {
+    // not logged in
+    res.redirect("/login");
+    return;
+  }
+  var bucket = admin.storage.bucket();
+
+});
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {

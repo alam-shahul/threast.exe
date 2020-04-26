@@ -30,7 +30,7 @@ function Homepage(props) {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: (authResult) => {
         let currentUser = firebase.auth().currentUser;
-        // console.log(currentUser);
+        console.log(currentUser);
         let token = currentUser.getIdToken(true);
         let displayName = currentUser.displayName;
         let email = currentUser.email;
@@ -51,11 +51,11 @@ function Homepage(props) {
         </div>
       )
       :
-      // TODO: Is handleLogout working properly here? Also, is this the right place to be doing it?
+      // TODO: Is this the right place to call handleLogout?
       (
         <div>
           <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-          <a onClick={() => {firebase.auth().signOut(); props.handleLogout}}>Sign-out</a>
+          <a onClick={() => {firebase.auth().signOut(); props.handleLogout()}}>Sign-out</a>
         </div>
       )
       }

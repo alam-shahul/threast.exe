@@ -7,7 +7,12 @@ import "firebase/auth";
 
 import "../../utilities.css";
 
+import { get, post } from "../../utilities";
+
 function Art(props) {
+  get("/api/whoami").then((user) => {
+    console.log(user);
+  });
 
   return (
     <>
