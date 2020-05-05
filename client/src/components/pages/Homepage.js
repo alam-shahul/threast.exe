@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GoogleLogin, { GoogleLogout } from "react-google-login";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 import { firebase } from '@firebase/app';
@@ -8,12 +7,14 @@ import "firebase/auth";
 import "../../utilities.css";
 import "./Homepage.css";
 
+import { auth, firestore } from "../../firebaseClient";
+
 function Homepage(props) {
 
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    var unregisterAuthObserver = props.firebaseApp.auth().onAuthStateChanged((user) => {
+    var unregisterAuthObserver = auth.onAuthStateChanged((user) => {
         setIsSignedIn(!!user);
       });
     return unregisterAuthObserver;
@@ -29,13 +30,16 @@ function Homepage(props) {
     callbacks: {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: (authResult) => {
-        let currentUser = firebase.auth().currentUser;
+        let currentUser = auth.currentUser;
         console.log(currentUser);
         let token = currentUser.getIdToken(true);
-        let displayName = currentUser.displayName;
-        let email = currentUser.email;
-        let loginResponse = {"token": token, "displayName": displayName, "email": email}
-        props.handleLogin(loginResponse);
+        console.log(auth);
+        token.then((idToken) => {
+          let displayName = currentUser.displayName;
+          let email = currentUser.email;
+          let loginResponse = {"token": idToken, "displayName": displayName, "email": email}
+          props.handleLogin(loginResponse);
+        });
         return false;
       }
     }
@@ -47,15 +51,15 @@ function Homepage(props) {
       (
         <div>
           <p>Please sign-in:</p>
-          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
         </div>
       )
       :
       // TODO: Is this the right place to call handleLogout?
       (
         <div>
-          <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-          <a onClick={() => {firebase.auth().signOut(); props.handleLogout()}}>Sign-out</a>
+          <p>Welcome {auth.currentUser.displayName}! You are now signed-in!</p>
+          <a onClick={() => {auth.signOut(); props.handleLogout()}}>Sign-out</a>
         </div>
       )
       }

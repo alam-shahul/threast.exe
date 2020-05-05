@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda+One&display=swap');
+
+.polaroidFrame {
+  padding: 10% 5% 15% 5%;
+  border: 1px solid gray;
+  border-radius: 2px;
+  box-shadow: 5px 5px 5px #aaaaaa;
+  filter: sepia(.75);
+  transition: 0.3s;
+}
+
+.polaroidFrame:hover {
+  filter: sepia(0);
+}
+
+.polaroidImage {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background-color: black;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid gray;
+}
+
+.polaroidImage img{
+  display: block;
+  max-width: 100%;
+}
+
+.polaroidImage::after {
+  box-shadow: inset 0px 0px 5px 5px rgba(0, 0, 0, 0.25);
+  content: "";
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.title {
+  font-size: 20px;
+  font-family: "Merienda One", cursive;
+  text-align: center;
+  color:  black;
+  padding: 10px 0 10px 0;
+}
+
+.description {
+  font-size: 12px;
+  text-align: center;
+  color:  grey;
+}
