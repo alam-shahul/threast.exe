@@ -10,15 +10,18 @@ import "../../utilities.css";
 import { get, post } from "../../utilities";
 
 function Create(props) {
-  get("/api/whoami").then((user) => {
-    console.log(user);
-  });
-
   const [name, setName] = useState("");
   const [redirect, setRedirect] = useState(null);
   const [description, setDescription] = useState("");
   const [type, setType] = useState("image");
   const [saved, setSaved] = useState(false);
+  const [user, setUser] = useState(null);
+ 
+  if (!user) { 
+    get("/api/whoami").then((user) => {
+      setUser(user);
+    });
+  }
 
   function updateName(e) {
     setName(e.target.value);
@@ -44,7 +47,8 @@ function Create(props) {
       title: name,
       type: type,
       description: description,
-      downloadURL: null
+      downloadURL: null,
+      ownerId: user.uid
     };
 
     firestore.collection("art").add(data)
@@ -61,25 +65,25 @@ function Create(props) {
         <Redirect to={redirect}/>
         : <></>
       }
-      <form className="pa4 black-80" onSubmit={handleSubmit}>
-        <div className="measure">
-          <label className="f6 b db mb2">Title</label>
-          <input required className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" onChange={updateName} value={name}/>
-          <small className="f6 black-60 db mb2">A title for your artwork.</small>
-          <label className="f6 b db mb2">Art type</label>
+      <form className="" onSubmit={handleSubmit}>
+        <div className="">
+          <label className="">Title</label>
+          <input required className="" type="text" onChange={updateName} value={name}/>
+          <small className="">A title for your artwork.</small>
+          <label className="">Art type</label>
           <select value={type} onChange={updateType}>
             <option value="image">Image</option>
             <option value="video">Video</option>
             <option value="audio">Audio</option>
           </select>
-          <label className="f6 b db mb2">Description</label>
-          <input required className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" onChange={updateDescription} value={description}/>
-          <small className="f6 black-60 db mb2">A description for your artwork.</small>
-          <button type="button" className="f6 link br2 ph3 pv2 mb2 dib white bg-dark-green mr2" onClick={handleSubmit}>Save Deck</button>
+          <label className="">Description</label>
+          <input required className="" type="text" onChange={updateDescription} value={description}/>
+          <small className="">A description for your artwork.</small>
+          <button type="button" className="" onClick={handleSubmit}>Save Art</button>
           { saved ?
-            <span className="dark-green">Deck saved successfully.</span>
+            <span className="dark-green">Art saved successfully.</span>
           :
-            <span className="gold">The deck has not been saved.</span>
+            <span className="gold">The art has not been saved.</span>
           }
         </div>
       </form>
