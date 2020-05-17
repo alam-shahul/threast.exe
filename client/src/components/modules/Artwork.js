@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage } from "../../firebaseClient";
@@ -38,11 +38,13 @@ function Artwork(props) {
 
     if (target.files && target.files[0]) {
       var file = target.files[0];
+      
       const reader = new FileReader();
       reader.onload = (e) => {
         setDownloadURL(e.target.result);
       }   
       reader.readAsDataURL(file);
+      
       setFile(file);
       setSaved(false);
     } 
@@ -56,7 +58,7 @@ function Artwork(props) {
       if (file != null) {
         const filepath = `${type}/${Date.now()}`;
         let uploadTask = uploadToFirestore(filepath, file);
-        console.log(uploadTask);
+        
         uploadTask.then(function(snapshot) {
           snapshot.ref.getDownloadURL().then(function(downloadURL) {
             setDownloadURL(downloadURL);
@@ -120,11 +122,9 @@ function Artwork(props) {
           // User doesn't have permission to access the object
           // TODO: Let's display an error message here!
           break;
-    
         case 'storage/canceled':
           // User canceled the upload
           break;
-    
         case 'storage/unknown':
           // Unknown error occurred, inspect error.serverResponse
           break;
