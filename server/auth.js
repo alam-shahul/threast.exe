@@ -32,25 +32,37 @@ function getOrCreateUser(userQuery) {
 }
 
 function login(req, res) {
-  admin.auth.verifyIdToken(req.body.token)
-    .then((decodedToken) => {
-     // console.log(decodedToken);
-     // TODO: this seems jank, and stems from earlier jankiness. In particular,
-     // this is the third time that I'm copying "email" and "displayName"...
-     // REVISION: It's probably fine; can delete this TODO
-     let userQuery ={"uid": decodedToken.uid, "email": req.body.email, "displayName": req.body.displayName};
-     return getOrCreateUser(userQuery);
-    })
-    .then((user) => {
-      // persist user in the session
-      console.log(user);
-      req.session.user = user;
-      res.send(user);
-    })
-    .catch((err) => {
-      console.log(`Failed to log in: ${err}`);
-      res.status(401).send({ err });
-    });
+  // First, check if user is whitelisted in Firebase (could also have local list of whitelisted users
+  admin.firestore.collection("whitelist").doc(req.body.email).get()
+    .then((whitelistEntry) => {
+      let isWhitelisted = whitelistEntry.exists;
+      if (isWhitelisted) {
+        admin.auth.verifyIdToken(req.body.token)
+          .then((decodedToken) => {
+            // console.log(decodedToken);
+            // TODO: this seems jank, and stems from earlier jankiness. In particular,
+            // this is the third time that I'm copying "email" and "displayName"...
+            // REVISION: It's probably fine; can delete this TODO
+            let userQuery ={"uid": decodedToken.uid, "email": req.body.email, "displayName": req.body.displayName};
+            return getOrCreateUser(userQuery);
+          })
+          .then((user) => {
+            // persist user in the session
+            console.log(user);
+            req.session.user = user;
+            res.send(user);
+          })
+          .catch((err) => {
+            console.log(`Failed to log in: ${err}`);
+            res.status(401).send({ err });
+          });
+     }
+     else throw "User is not whitelisted!";
+  })
+  .catch((err) => {
+    console.log(`Failed to log in: ${err}`);
+    res.status(401).send({ err });
+  });
 }
 
 function logout(req, res) {
