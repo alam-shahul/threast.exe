@@ -7,6 +7,7 @@ import Create from "./pages/Create.js";
 import People from "./pages/People.js";
 import Profile from "./pages/Profile.js";
 import SignIn from "./pages/SignIn.js";
+import Navbar from "./Navbar.js";
 
 import "../utilities.css";
 
@@ -67,12 +68,11 @@ function App(props) {
 
   return (
 	<>
-	  <BrowserRouter>
+      <BrowserRouter>
+	    <Navbar/>
 	    <Switch>
           <Route exact path="/">
             <Homepage
-	          handleLogin={handleLogin}
-	          handleLogout={handleLogout}
 	          userId={userId}
 	        />
           </Route>
@@ -98,6 +98,8 @@ function App(props) {
           </Route>
           <Route path="/signin">
             <SignIn 
+	          handleLogin={handleLogin}
+	          handleLogout={handleLogout}
 	          userId={userId}
             />
           </Route>
