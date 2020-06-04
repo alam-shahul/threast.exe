@@ -2,38 +2,58 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { firebase } from '@firebase/app';
-import { auth, firestore, storage } from "../../firebaseClient";
+import { auth, firestore, storage} from "../../firebaseClient";
 
 import "../../utilities.css";
+import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import "../../public/stylesheets/Art.css";
+import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 
 function Artwork(props) {
+  const [redirect, setRedirect] = useState(null);
   const [title, setTitle] = useState(props.artwork.title);
   const [description, setDescription] = useState(props.artwork.description);
-  const [type, setType] = useState(props.artwork.type);
-  const [ownerId, setOwnerId] = useState(props.artwork.ownerId);
   const [file, setFile] = useState(null);
   const [downloadURL, setDownloadURL] = useState(props.artwork.downloadURL);
-  const [saved, setSaved] = useState(true);
+  const [visibility, setVisibility] = useState(props.artwork.visibility);
 
-  const isOwner = (ownerId === props.userId); 
+  // The dataStatus state has five possible values: "saved", "unsaved", "saving", "deleting" and "deleted"
+  const [dataStatus, setDataStatus] = useState("saved");
+
+  const isOwner = (props.user && props.artwork.ownerId === props.user.uid); 
+
+
+  // This effect is necessary to sync the state change with the upload
+  // (although it isn't done perfectly)
+  useEffect(() => {
+    if (dataStatus == "saving") {
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+      saveArtwork(timestamp);
+    }
+  }, [dataStatus]);
 
   function updateTitle(e) {
+    if (!e.target.value) {
+      e.target.setCustomValidity("Please enter a title."); 
+    } else {
+      e.target.setCustomValidity("");
+    }
+
     setTitle(e.target.value);
-    setSaved(false);
+    setDataStatus("unsaved");
   }
 
   function updateDescription(e) {
     setDescription(e.target.value);
-    setSaved(false);
+    setDataStatus("unsaved");
   }
 
-  function updateType(e) {
-    setType(e.target.value);
-    setSaved(false);
+  function updateVisibility(e) {
+    setVisibility(e.target.value);
+    setDataStatus("unsaved");
   }
 
-  function updateFile(e) {
+  function updateFile(e, updateDisplayURL) {
     const target = e.target;
 
     if (target.files && target.files[0]) {
@@ -41,34 +61,36 @@ function Artwork(props) {
       
       const reader = new FileReader();
       reader.onload = (e) => {
-        setDownloadURL(e.target.result);
+        updateDisplayURL(e.target.result);
       }   
       reader.readAsDataURL(file);
       
       setFile(file);
-      setSaved(false);
+      setDataStatus("unsaved");
     } 
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (!saved) {
-      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    if (dataStatus == "unsaved") {
       if (file != null) {
-        const filepath = `${type}/${Date.now()}`;
-        let uploadTask = uploadToFirestore(filepath, file);
+        const filepath = `${props.artwork.type}/${Date.now()}`;
+        let uploadTask = uploadToFirestore(filepath, file, props.artwork.ownerId);
         
         uploadTask.then(function(snapshot) {
-          snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            setDownloadURL(downloadURL);
-            console.log('File available at', downloadURL);
-            saveArtwork(timestamp);
+          snapshot.ref.getDownloadURL().then(function(newDownloadURL) {
+            if (downloadURL)
+              deleteMediaByURL(downloadURL);
+
+            setDownloadURL(newDownloadURL);
+            console.log('File available at', newDownloadURL);
+            setDataStatus("saving");
           });
         });
       }
       else {
-        saveArtwork(timestamp);
+        setDataStatus("saving");
       }
     }
   }
@@ -79,140 +101,87 @@ function Artwork(props) {
     let data = {
       lastUpdated: timestamp,
       title: title,
-      type: type,
+      type: props.artwork.type,
       description: description,
       downloadURL: downloadURL,
-      ownerId: ownerId
+      ownerId: props.artwork.ownerId,
+      profileId: props.artwork.profileId,
+      visibility: visibility
     };
     let art = artRef.set(data)
       .then(artSnapshot => {
         console.log("Art saved.");
-        setSaved(true);
+        setDataStatus("saved");
       });
-  } 
+  }
+
+  function deleteArtwork() {
+    if (!props.id)
+      return;
+
+    const artName = `${props.id}`;
+    let artRef = firestore.collection("art").doc(artName);
+   
+    if (downloadURL)
+      deleteMediaByURL(downloadURL);
  
-  function uploadToFirestore(filepath, file) {
-    var metadata = {
-      contentType: file.type,
-    };
-
-    var storageRef = storage.ref();
-    var fileRef = storageRef.child(filepath);
-    var uploadTask = fileRef.put(file, metadata);
-      
-    function displayProgress(snapshot) {
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
-      switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED: // or 'paused'
-          console.log('Upload is paused');
-          break;
-        case firebase.storage.TaskState.RUNNING: // or 'running'
-          console.log('Upload is running');
-          break;
-      }
-    }
-
-    function handleErrors(error) {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
-      switch (error.code) {
-        case 'storage/unauthorized':
-          // User doesn't have permission to access the object
-          // TODO: Let's display an error message here!
-          break;
-        case 'storage/canceled':
-          // User canceled the upload
-          break;
-        case 'storage/unknown':
-          // Unknown error occurred, inspect error.serverResponse
-          break;
-      }
-    }
-    
-    var setUploadCallbacks = uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED); // or 'state_changed'
-
-    setUploadCallbacks({
-      "next": displayProgress,
-      "error": handleErrors
-    });
-
-    return uploadTask;
-  }
-
-  function FileUpload(props) {
-    const type = props.type;
-    if (type == "image")
-        return (<input required type="file" accept="image/png, image/jpeg, image/gif, image/svg+xml" onChange={updateFile}/>);
-    else if (type == "video")
-        return (<input required type="file" accept="video/*" onChange={updateFile}/>);
-    else if (type == "audio")
-        return (<input required type="file" accept="audio/*" onChange={updateFile}/>);
-    else return null; 
-  }
-
-  function FileDisplay(props) {
-    const type = props.type;
-    if (type == "image")
-        return (<img src={downloadURL}/>);
-    else if (type == "video")
-        return (
-          <video controls="controls" type="video/*">
-            <source src={downloadURL}/>
-          </video>
-        );
-    else if (type == "audio")
-        return (
-          <audio controls="controls" type="audio/*">
-            <source src={downloadURL}/>
-          </audio>
-        );
-    else return null; 
-  }
+    // Delete the file
+    artRef.delete().then(function() {
+      // File deleted successfully
+      console.log("Artwork deleted!");
+    }).catch(function(error) {
+      // Uh-oh, an error occurred!
+      console.log(error);
+    }); 
+  } 
 
   return (
     <>
       <Link to="/art">Back To Art</Link>
-      <form className="" onSubmit={handleSubmit}>
-        <div className="">
-          { isOwner ?
-              (
-                <>
+      <div className="">
+        { isOwner ?
+            (
+              <>
+                <form className="" onSubmit={handleSubmit}>
                   <label className="">Title</label>
-                  <input required className="" type="text" onChange={updateTitle} value={title}/>
+                  <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
                   <small className="">A title for your artwork.</small>
                   <label className="">Description</label>
-                  <input required className="" type="text" onChange={updateDescription} value={description}/>
+                  <input className="" type="text" onChange={updateDescription} value={description}/>
                   <small className="">A description for your artwork.</small>
-                  <FileUpload type={type}/>
-                  <div className = "fileDisplayContainer">
-                    <FileDisplay type={type}/>
-                  </div>
-                  <button type="button" className="" onClick={handleSubmit}>Save Art</button>
-                  { saved ?
+                  <label className="">Visibility</label>
+                  <select value={visibility} onChange={updateVisibility}>
+                    <option value="public">Public</option>
+                    <option value="threast">Threast-Only</option>
+                  </select>
+                  <FileProcessor type={props.artwork.type} initialURL={downloadURL} updateFile={updateFile}/>
+                  <button type="submit" className="">Save Art</button>
+                  <button type="button" className="" onClick={deleteArtwork}>Delete Art</button>
+                  { dataStatus == "saved" ?
                     <span className="dark-green">Artwork saved successfully.</span>
                   :
                     <span className="gold">The artwork has not been saved.</span>
                   }
-                </>
-              ) :
-              (
-                <>
-                  <label className="">Title</label>
-                  <div>{title}</div>
-                  <label className="">Description</label>
-                  <div>{description}</div>
-                  <label className="">Owner ID</label>
-                  <div>{ownerId}</div>
-                  <div className = "fileDisplayContainer">
-                    <FileDisplay type={type}/>
-                  </div>
-                </>
-              )
-          }
-        </div>
-      </form>
+                </form>
+              </>
+            ) :
+            (
+              <>
+                <label className="">Title</label>
+                <div>{title}</div>
+                <label className="">Description</label>
+                <div>{description}</div>
+                <label className="">Posted by</label>
+                <Link to={"/people?id=" + props.artwork.profileId}>
+                  <div>{props.artwork.ownerId}</div>
+                </Link>
+                <div className = "fileDisplayContainer">
+                  <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
+                </div>
+              </>
+            )
+        }
+      </div>
     </>
   );
 }

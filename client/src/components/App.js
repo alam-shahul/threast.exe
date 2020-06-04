@@ -5,8 +5,7 @@ import Homepage from "./pages/Homepage.js";
 import Art from "./pages/Art.js";
 import Create from "./pages/Create.js";
 import People from "./pages/People.js";
-import Profile from "./pages/Profile.js";
-import SignIn from "./pages/SignIn.js";
+import Account from "./pages/Account.js";
 import Navbar from "./Navbar.js";
 
 import "../utilities.css";
@@ -22,85 +21,72 @@ import { auth, firestore } from "../firebaseClient";
  */
 
 function App(props) {
-
-  const [userId, setUserId] = useState(undefined);
-  //const [firebaseApp, setFirebaseApp] = useState();
-
-  //var firebaseConfig = {
-  //  apiKey: "AIzaSyAvZsDdDGOyMaCHQcXsUDx-85yr9akOhgw",
-  //  authDomain: "threast-website.firebaseapp.com",
-  //  databaseURL: "https://threast-website.firebaseio.com",
-  //  projectId: "threast-website",
-  //  storageBucket: "threast-website.appspot.com",
-  //  messagingSenderId: "933380237825",
-  //  appId: "1:933380237825:web:3e4ccd069e65d4b8"
-  //};
-
-  //if(!firebase.apps.length) {
-  //  var firebaseInit = firebase.initializeApp(firebaseConfig);
-  //  setFirebaseApp(firebaseInit);
-  //}
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   useEffect(() => {
     get("/api/whoami").then((user) => {
-      if (user._id) {
         // they are registed in the database, and currently logged in.
-        setUserId(user._id);
-      }
+        if (!user) {
+          setUser(user);
+        }
     });
-  });
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   var handleLogin = (res) => {
- //console.log(`Logged in as ${res.displayName}`);
-    console.log(res);
-      post("/api/login", { token: res.token, displayName: res.displayName, email: res.email }).then((user) => {
-        setUserId(user.uid);
-        // console.log(userId);
-        post("/api/initsocket", { socketid: socket.id });
+  //console.log(`Logged in as ${res.displayName}`);
+    var whitelistResult = post("/api/login", { token: res.token, displayName: res.displayName, email: res.email }).then((user) => {
+      setUser(user);
+      post("/api/initsocket", { socketid: socket.id });
+      return true;
+    }).catch((err) => {
+      console.log(err);
+      return false;
     });
+    return whitelistResult;
   };
 
   var handleLogout = () => {
     post("/api/logout").then(() => {
-      setUserId(null);
+      setUser(null);
     });
   };
 
   return (
 	<>
       <BrowserRouter>
-	    <Navbar/>
-	    <Switch>
+	    <Navbar 
+          user={user}
+        />
+	    <Switch >
           <Route exact path="/">
-            <Homepage
-	          userId={userId}
+            <Homepage 
+	          user={user}
 	        />
           </Route>
           <Route path="/art">
             <Art 
-	          userId={userId}
+	          user={user}
             />
           </Route>
           <Route path="/create">
             <Create
-	          userId={userId}
+	          user={user}
             />
           </Route>
           <Route path="/people">
             <People 
-	          userId={userId}
+	          user={user}
             />
           </Route>
-          <Route path="/profile">
-            <Profile 
-	          userId={userId}
-            />
-          </Route>
-          <Route path="/signin">
-            <SignIn 
+          <Route path="/account">
+            <Account
 	          handleLogin={handleLogin}
 	          handleLogout={handleLogout}
-	          userId={userId}
+	          user={user}
             />
           </Route>
 	      <NotFound default />

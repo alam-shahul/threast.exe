@@ -17,14 +17,20 @@ function getOrCreateUser(userQuery) {
         return userSnapshot.data();
       }
       else {
-        let data = {
-          uid: userQuery.uid,
-          email: userQuery.email,
-          displayName: userQuery.displayName
-        };
-        let setUser = userRef.set(data)
-          .then((newUser) => newUser);
-        console.log("User Created");
+        let setUser = admin.firestore.collection("profiles").where("email", "==", userQuery.email).get()
+          .then((profileSnapshot) => {
+            console.log(profileSnapshot.docs[0].id);
+            let data = {
+              uid: userQuery.uid,
+              email: userQuery.email,
+              displayName: userQuery.displayName,
+              profileId: profileSnapshot.docs[0].id
+            };
+            let setUser = userRef.set(data)
+              .then((newUser) => newUser);
+            console.log("User Created");
+            return setUser;
+          });
         return setUser;
       }
     });

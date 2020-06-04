@@ -1,3 +1,6 @@
+import { storage } from "./firebaseClient";
+import { firebase } from '@firebase/app';
+
 /**
  * Utility functions to make API requests.
  * By importing this file, you can use the provided get and post functions.
@@ -61,3 +64,71 @@ export function post(endpoint, params = {}) {
       throw `POST request to ${endpoint} failed with error:\n${error}`;
     });
 }
+
+// Handle Firebase storage upload 
+export function uploadToFirestore(filepath, file, ownerId) {
+  var metadata = {
+    contentType: file.type,
+    customMetadata: {
+      "ownerId": ownerId
+    }
+  };
+
+  var storageRef = storage.ref();
+  var fileRef = storageRef.child(filepath);
+  var uploadTask = fileRef.put(file, metadata);
+    
+  function displayProgress(snapshot) {
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case firebase.storage.TaskState.PAUSED: // or 'paused'
+        console.log('Upload is paused');
+        break;
+      case firebase.storage.TaskState.RUNNING: // or 'running'
+        console.log('Upload is running');
+        break;
+    }
+  }
+
+  function handleErrors(error) {
+    // A full list of error codes is available at
+    // https://firebase.google.com/docs/storage/web/handle-errors
+    switch (error.code) {
+      case 'storage/unauthorized':
+        // User doesn't have permission to access the object
+        // TODO: Let's display an error message here!
+        break;
+      case 'storage/canceled':
+        // User canceled the upload
+        break;
+      case 'storage/unknown':
+        // Unknown error occurred, inspect error.serverResponse
+        break;
+    }
+  }
+  
+  var setUploadCallbacks = uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED); // or 'state_changed'
+
+  setUploadCallbacks({
+    "next": displayProgress,
+    "error": handleErrors
+  });
+
+  return uploadTask;
+}
+
+export function deleteMediaByURL(deletionURL) {
+    let mediaRef = storage.refFromURL(deletionURL);
+
+    // Delete the file
+    mediaRef.delete().then(function() {
+      // File deleted successfully
+      console.log("Media deleted!");
+    }).catch(function(error) {
+      // Uh-oh, an error occurred!
+      console.log(error);
+    }); 
+  }
+

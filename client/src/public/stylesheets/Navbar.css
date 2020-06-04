@@ -1,6 +1,24 @@
-.logoimage {
-  height: 60px;
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  height: 80px;
   margin-left: 10px;
+}
+
+.logo span, .logo img {
+    font-size: 1.4rem;
+    color: #dfe6e9;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 300ms linear 0s;
+    margin-right: 10px;
+}
+
+
+.logo img{
+  height: 60px;
 }
 
 .navbar {
@@ -16,10 +34,18 @@
 .flexcontainer {
   display: flex;
   margin: auto;
-  //padding: 0 30px;
   justify-content: space-between;
   align-items: center;
+  text-decoration: none;
   height: 80px;
+}
+
+.flexcontainer a {
+    font-size: 1.4rem;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 300ms linear 0s;
 }
 
 .links {

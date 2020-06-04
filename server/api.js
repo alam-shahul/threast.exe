@@ -48,29 +48,6 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
-router.post("/create", (req, res, next) => {
-  if (!req.user) {
-    // not logged in
-    res.redirect("/login");
-    return;
-  }
-  var bucket = admin.storage.bucket();
-
-});
-
-router.get("/art", (req, res, next) => {
-  if (req.query.id) {
-  }
-  else {
-    admin.firestore.collection("users").get()
-      .then((artSnapshot) => {
-          console.log(artSnapshot);
-          res.send(artSnapshot);
-        }
-      );
-  }
-});
-
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);

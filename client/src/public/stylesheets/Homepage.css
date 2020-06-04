@@ -70,7 +70,7 @@
 
 .x1 {
   top: 80px;
-  animation: moveclouds 75s linear infinite;
+  animation: moveclouds 75s linear -30s infinite;
 }
 
 .x2 {
@@ -79,7 +79,7 @@
   transform: scale(0.6);
   opacity: 0.6;
 	
-  animation: moveclouds 125s linear infinite;
+  animation: moveclouds 125s linear -25s infinite;
 }
 
 .x3 {
@@ -88,7 +88,7 @@
   transform: scale(0.8);
   opacity: 0.8;
 	
-  animation: moveclouds 86s linear infinite;
+  animation: moveclouds 86s linear -78s infinite;
 }
 
 .x4 {
@@ -97,7 +97,7 @@
   transform: scale(0.75);
   opacity: 0.75;
 	
-  animation: moveclouds 100s linear infinite;
+  animation: moveclouds 100s linear -75s infinite;
 }
 
 .x5 {
@@ -106,7 +106,7 @@
   transform: scale(0.3);
   opacity: 0.75;
 	
-  animation: moveclouds 50s linear infinite;
+  animation: moveclouds 50s linear -10s infinite;
 }
 
 .x6 {
@@ -115,7 +115,7 @@
   transform: scale(0.8);
   opacity: 0.8;
 	
-  animation: moveclouds 90s linear infinite;
+  animation: moveclouds 90s linear -20s infinite;
 }
 
 .x8 {
@@ -124,7 +124,7 @@
   transform: scale(1);
   opacity: 0.2;
 	
-  animation: moveclouds 80s linear infinite;
+  animation: moveclouds 80s linear -50s infinite;
 }
 
 .x9 {
@@ -133,7 +133,7 @@
   transform: scale(0.7);
   opacity: 0.5;
 	
-  animation: moveclouds 45s linear infinite;
+  animation: moveclouds 45s linear -30s infinite;
 }
 
 .x10 {

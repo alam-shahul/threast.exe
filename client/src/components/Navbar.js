@@ -4,28 +4,42 @@ import { get, post } from "../utilities";
 import { Link } from "react-router-dom";
 
 import "../public/stylesheets/Navbar.css";
+import logo_image from "../public/images/danger.svg";
 
 const Logo = () => {
   return (
     <>
-      <div>threast.exe</div>
     </>
   )
 }
 
 function Navbar(props){
-
   return (
     <>
       <div className="navbar">
         <div className="flexcontainer">
-          <Link to="/">
-            <Logo/>
-          </Link>
+          <div className="logo">
+            <Link to="/">
+              <img src={logo_image}/>
+            </Link>
+            <Link to="/">
+              <span>threast</span>  
+            </Link>
+          </div>
           <div className="navlinks">
-            <Link to="/signin">Auth</Link>
             <Link to="/art">Art</Link>
-            <Link to={`/profile?id=0`}>Profile</Link>
+            <Link to="/people">People</Link>
+            { (props.user) ?
+              (
+                <>
+                  <Link to="/account">Profile</Link>
+                  <Link to="/create">Create</Link>
+                </>
+              ) :
+              <>
+                <Link to="/account">Authenticate</Link>
+              </>
+            } 
           </div>
         </div>
       </div>

@@ -5,11 +5,11 @@ const { scaleDown } = transitions;
 
 import { firebase } from '@firebase/app';
 
-import ArtThumbnail from "./ArtThumbnail.js";
-import "../../public/stylesheets/Art.css";
+import ProfileThumbnail from "./ProfileThumbnail.js";
+import "../../public/stylesheets/People.css";
 
 
-function Gallery(props) {
+function PeopleGallery(props) {
   //const [mode, setMode] = useState(null);
   return (
     <>
@@ -25,17 +25,17 @@ function Gallery(props) {
         gutterWidth={15}
         gutterHeight={15}
       >
-        {props.gallery ?
-          props.gallery.map((artworkSnapshot) => {
-            const artwork = artworkSnapshot.data();
+        {props.peopleGallery ?
+          props.peopleGallery.map((profileSnapshot) => {
+            const profile = profileSnapshot.data();
             return <Link
                      style={{textDecoration: 'none'}}
-                     key={artworkSnapshot.id}
-                     to={"/art?id=" + artworkSnapshot.id}  
+                     key={profileSnapshot.id}
+                     to={"/people?id=" + profileSnapshot.id}  
                    >
-                     <ArtThumbnail
-                        key={artworkSnapshot.id}
-                        artwork={artwork}
+                     <ProfileThumbnail
+                        key={profileSnapshot.id}
+                        profile={profile}
                      />
                    </Link>
             })
@@ -47,4 +47,4 @@ function Gallery(props) {
   );
 }
 
-export default Gallery;
+export default PeopleGallery;

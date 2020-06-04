@@ -11,6 +11,8 @@ import { auth, firestore } from "../../firebaseClient";
 
 function Homepage(props) {
   // TODO: perhaps replace this with a THREE.js animation eventually?
+  // In the long term, will definitely want to replace this animation,
+  // since it is actually so CPU-intensive
   return (
     <>
       <div className="homepage_container">

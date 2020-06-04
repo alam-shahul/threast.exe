@@ -21,15 +21,10 @@ function Art(props) {
   const [id, setId] = useState(null);
   const [artwork, setArtwork] = useState(null);
   const [gallery, setGallery] = useState(null);
-  const [user, setUser] = useState(null);
- 
-  if (!user) { 
-    get("/api/whoami").then((user) => {
-      setUser(user);
-    });
-  }
 
   // TODO: All of this seems a bit hacky... you have basically implemented a state machine. Is that necessary?
+  // Perhaps you just need to use the useEffect hook?
+
   if (parsed.id) {
     if(!artwork || (parsed.id != id)) {
       firestore.collection("art").doc(parsed.id).get()
@@ -43,11 +38,15 @@ function Art(props) {
   else {
     if(!gallery || id) {
       console.log(gallery);
-      firestore.collection("art").orderBy("lastUpdated").get()
+      console.log(props.user);
+     
+      let query = (props.user) ?
+        firestore.collection("art").orderBy("lastUpdated")
+        :     
+        firestore.collection("art").orderBy("lastUpdated").where("visibility", "==", "public");
+
+      query.get()
         .then((gallerySnapshot) => {
-          //gallerySnapshot.forEach(doc => {
-          //  console.log(doc.id, '=>', doc.data().downloadURL);
-          //});
           setGallery(gallerySnapshot.docs);
           setId(null);
         });
@@ -56,7 +55,7 @@ function Art(props) {
   return (
     <>
       { id ?
-        (artwork ? <Artwork artwork={artwork} id={id} userId={user.uid}/> : <div>Loading...</div>):
+        (artwork ? <Artwork artwork={artwork} id={id} user={props.user}/> : <div>Loading...</div>):
         <Gallery gallery={gallery}/> 
       }     
     </>
