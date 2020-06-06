@@ -61,6 +61,7 @@ function Create(props) {
       type: type,
       description: description,
       downloadURL: null,
+      ownerName: props.user.displayName,
       ownerId: props.user.uid,
       profileId: props.user.profileId,
       visibility: visibility

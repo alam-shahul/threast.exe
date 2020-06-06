@@ -8,13 +8,25 @@ import "firebase/auth";
 
 import { auth, firestore } from "../../firebaseClient";
 import ProfileEditor from "../modules/ProfileEditor.js";
+import ProfileThumbnail from "../modules/ProfileThumbnail.js";
+import Gallery from "../modules/Gallery.js";
 import "../../public/stylesheets/Create.css";
 import "../../utilities.css";
 
 function Account(props) {
   const [profile, setProfile] = useState(null);
+  const [artworks, setArtworks] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  let mockProfile = null;
+
+  if (profile) {
+    mockProfile = {
+      displayName: profile.displayName,
+      blurb: profile.blurb,
+      photoURL: profile.photoURL
+    }
+  }
   let isWhitelisted = (!!props.user);
 
   useEffect(() => {
@@ -25,13 +37,26 @@ function Account(props) {
   });
 
   if (props.user && !profile) {
+    console.log(props.user);
     console.log(props.user.profileId);
     firestore.collection("profiles").doc(props.user.profileId).get()
       .then((profileSnapshot) => {
         let profileData = profileSnapshot.data();
-        console.log(profileData);
         setProfile(profileData);
       });
+  }
+
+  if (props.user && !artworks) {
+    firestore.collection("art")
+      .orderBy("lastUpdated")
+      .where("profileId", "==", props.user.profileId)
+      .get()
+        .then((artworksSnapshot) => {
+          console.log(artworksSnapshot.docs);
+          if (artworksSnapshot.docs) {
+            setArtworks(artworksSnapshot.docs);
+          }
+        });
   }
 
   const uiConfig = {
@@ -46,15 +71,12 @@ function Account(props) {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: (authResult) => {
         let currentUser = auth.currentUser;
-        console.log(currentUser);
         let token = currentUser.getIdToken(true);
-        console.log(auth);
         token.then((idToken) => {
           let displayName = currentUser.displayName;
           let email = currentUser.email;
           let loginResponse = {"token": idToken, "displayName": displayName, "email": email}
           props.handleLogin(loginResponse).then((whitelistResult) => {
-            console.log(whitelistResult);
           });
         });
         return false;
@@ -66,18 +88,31 @@ function Account(props) {
     return (
       <>
         <div className="accountContainer">
-          <div className="authenticationMessage">
-            { (isWhitelisted) ?
-                `Welcome ${auth.currentUser.displayName}! You are now signed-in!`
+          <div className="editorContainer">
+            <div className="authenticationMessage">
+              { (isWhitelisted) ?
+                  `Welcome ${auth.currentUser.displayName}! You are now signed-in!`
+                :
+                  `You are currently not signed in as a whitelisted user. Please reauthenticate with a whitelisted account.`
+              }
+            </div>
+            <a onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</a>
+            { (profile) ?
+                <>
+                  <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile} updateParent={setProfile}/>
+                  <div className="profilePreview">
+                    <div>Thumbnail Preview</div>
+                    <ProfileThumbnail profile={mockProfile}/>
+                  </div>
+                </>
               :
-                `You are currently not signed in as a whitelisted user. Please reauthenticate with a whitelisted account.`
+                <></>
             }
           </div>
-          <a onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</a>
-          { (profile) ?
-              <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile}/>
+          { artworks ?
+            <Gallery gallery={artworks} title={"Your Art"}/>
             :
-              <></>
+            <></>
           }
         </div>
       </>

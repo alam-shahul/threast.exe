@@ -22,7 +22,7 @@ function Profile(props) {
                  }
                </div>
                { props.artworks ?
-                 <Gallery gallery={props.artworks}/>      
+                 <Gallery gallery={props.artworks} title={`${props.profile.displayName}'s Art`}/>      
                  :
                  <></>
                }

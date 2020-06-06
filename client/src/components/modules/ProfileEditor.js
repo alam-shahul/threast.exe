@@ -29,6 +29,9 @@ function ProfileEditor(props) {
 
   function updateBlurb(e) {
     setBlurb(e.target.value);
+   
+    const newProfile = Object.assign({}, props.profile, {blurb: e.target.value})
+    props.updateParent(newProfile);
     setDataStatus("unsaved");
   }
 
@@ -40,8 +43,6 @@ function ProfileEditor(props) {
       
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (photoURL)
-          deleteMediaByURL(photoURL);
         updateDisplayURL(e.target.result);
       }   
       reader.readAsDataURL(file);
@@ -63,6 +64,10 @@ function ProfileEditor(props) {
         uploadTask.then(function(snapshot) {
           snapshot.ref.getDownloadURL().then(function(downloadURL) {
             setPhotoURL(downloadURL);
+            const newProfile = Object.assign({}, props.profile, {photoURL: downloadURL})
+            props.updateParent(newProfile);
+            if (props.profile.photoURL)
+              deleteMediaByURL(photoURL);
             console.log('File available at', downloadURL);
             setDataStatus("saving");
           });

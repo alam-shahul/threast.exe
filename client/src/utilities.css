@@ -44,6 +44,13 @@ body {
   font-weight: 300;
 }
 
+button,
+input,
+select {
+  font: inherit;
+  padding: 0.1em 0.3em 0.1em 0.3em;
+}
+
 form {
   flex-grow: 1;
 }

@@ -56,7 +56,7 @@ function Art(props) {
     <>
       { id ?
         (artwork ? <Artwork artwork={artwork} id={id} user={props.user}/> : <div>Loading...</div>):
-        <Gallery gallery={gallery}/> 
+        <Gallery gallery={gallery} title={"3E Community Art"}/> 
       }     
     </>
   );

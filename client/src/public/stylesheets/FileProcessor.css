@@ -1,6 +1,15 @@
 .fileDisplayContainer video,
 .fileDisplayContainer img, 
 .fileDisplayContainer audio {
-  width: calc(100% - 60px);
+  max-width: 50vw;
+  max-height: calc(100vh - var(--navbar-height));
   margin: 30px;
+}
+
+@media (min-width: 550px) {
+  .fileDisplayContainer video,
+  .fileDisplayContainer img, 
+  .fileDisplayContainer audio {
+    max-height: calc(100vh - var(--navbar-height-desktop));
+  }
 }

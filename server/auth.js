@@ -9,6 +9,7 @@ const socket = require("./server-socket");
 function getOrCreateUser(userQuery) {
   console.log("Get or create user")
   // the "sub" field means "subject", which is a unique identifier for each user
+  console.log(userQuery);
   let userRef = admin.firestore.collection("users").doc(userQuery.uid);
   let user = userRef.get()
     .then(userSnapshot => {
@@ -17,7 +18,7 @@ function getOrCreateUser(userQuery) {
         return userSnapshot.data();
       }
       else {
-        let setUser = admin.firestore.collection("profiles").where("email", "==", userQuery.email).get()
+        let newUser = admin.firestore.collection("profiles").where("email", "==", userQuery.email).get()
           .then((profileSnapshot) => {
             console.log(profileSnapshot.docs[0].id);
             let data = {
@@ -26,12 +27,12 @@ function getOrCreateUser(userQuery) {
               displayName: userQuery.displayName,
               profileId: profileSnapshot.docs[0].id
             };
-            let setUser = userRef.set(data)
-              .then((newUser) => newUser);
-            console.log("User Created");
-            return setUser;
+            let newUser = userRef.set(data).then(() => {
+              return data;
+            });
+            return newUser;
           });
-        return setUser;
+        return newUser;
       }
     });
   return user;

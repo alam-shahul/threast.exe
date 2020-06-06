@@ -26,6 +26,7 @@ function App(props) {
   useEffect(() => {
     get("/api/whoami").then((user) => {
         // they are registed in the database, and currently logged in.
+        console.log(user);
         if (!user) {
           setUser(user);
         }
@@ -39,6 +40,7 @@ function App(props) {
   var handleLogin = (res) => {
   //console.log(`Logged in as ${res.displayName}`);
     var whitelistResult = post("/api/login", { token: res.token, displayName: res.displayName, email: res.email }).then((user) => {
+      console.log(user);
       setUser(user);
       post("/api/initsocket", { socketid: socket.id });
       return true;

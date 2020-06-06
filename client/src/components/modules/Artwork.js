@@ -9,6 +9,7 @@ import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import "../../public/stylesheets/Art.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 import ArtThumbnail from "./ArtThumbnail.js";
+import LinkButton from "./LinkButton.js";
 
 function Artwork(props) {
   const [redirect, setRedirect] = useState(null);
@@ -22,7 +23,7 @@ function Artwork(props) {
   const [dataStatus, setDataStatus] = useState("saved");
 
   const isOwner = (props.user && props.artwork.ownerId === props.user.uid); 
-  const mockArtwork = {
+  var mockArtwork = {
     title: title,
     description: description,
     type: props.artwork.type,
@@ -68,6 +69,13 @@ function Artwork(props) {
       const reader = new FileReader();
       reader.onload = (e) => {
         updateDisplayURL(e.target.result);
+        mockArtwork = {
+          title: title,
+          description: description,
+          type: props.artwork.type,
+          downloadURL: e.target.result
+        }
+        console.log(mockArtwork);
       }   
       reader.readAsDataURL(file);
       
@@ -110,6 +118,7 @@ function Artwork(props) {
       type: props.artwork.type,
       description: description,
       downloadURL: downloadURL,
+      ownerName: props.artwork.ownerName,
       ownerId: props.artwork.ownerId,
       profileId: props.artwork.profileId,
       visibility: visibility
@@ -214,17 +223,18 @@ function Artwork(props) {
             ) :
             (
               <>
-                <Link to="/art">Back To Art</Link>
-                <div className="artworkText">
-                  <div className="title">{title}</div>
-                  <div className="description">{description}</div>
-                  <div className="author">Posted by
-                    <Link to={"/people?id=" + props.artwork.profileId}>
-                      <div>{props.artwork.ownerId}</div>
-                    </Link>
+                <div className="artworkDisplay">
+                  <div className="artworkText">
+                    <div className="title">{title}</div>
+                    <div className="description">{description}</div>
+                    <div className="author">Posted by
+                      <Link to={"/people?id=" + props.artwork.profileId}>
+                        <div>{props.artwork.ownerName}</div>
+                      </Link>
+                    </div>
                   </div>
+                  <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
                 </div>
-                <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
               </>
             )
         }
