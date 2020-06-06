@@ -6,16 +6,28 @@ import default_media from "../../public/images/underConstruction.gif";
 export function FileDisplay(props) {
   const type = props.type;
   if (!props.URL)
-    return (<div>No media yet!</div>);
+    return (
+      <div className = "fileDisplayContainer">
+        <div>No media yet!</div>
+      </div>
+    )
   else if (type == "image")
-      return (<img src={props.URL}/>);
+      return (
+        <div className = "fileDisplayContainer">
+          <img src={props.URL}/>
+        </div>
+      );
   else if (type == "video")
       return (
-        <video src={props.URL} controls="controls" type="video/*"></video>
+        <div className = "fileDisplayContainer">
+          <video src={props.URL} controls="controls" type="video/*"></video>
+        </div>
       );
   else if (type == "audio"){
       return (
-        <audio src={props.URL} controls="controls" type="audio/*"></audio>
+        <div className = "fileDisplayContainer">
+          <audio src={props.URL} controls="controls" type="audio/*"></audio>
+        </div>
       );
   }
   else return null; 
@@ -38,9 +50,7 @@ export function FileProcessor(props) {
   return (
     <>
       <FileUpload type={props.type} updateFile={props.updateFile}/>
-      <div className = "fileDisplayContainer">
-        <FileDisplay type={props.type} URL={URL}/>
-      </div>
+      <FileDisplay type={props.type} URL={URL}/>
     </>
   )
 }

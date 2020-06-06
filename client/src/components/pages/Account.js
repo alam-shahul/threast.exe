@@ -8,6 +8,7 @@ import "firebase/auth";
 
 import { auth, firestore } from "../../firebaseClient";
 import ProfileEditor from "../modules/ProfileEditor.js";
+import "../../public/stylesheets/Create.css";
 import "../../utilities.css";
 
 function Account(props) {
@@ -62,34 +63,29 @@ function Account(props) {
   };
 
   if (isAuthenticated) {
-    console.log(props.user);
     return (
       <>
-        { (isWhitelisted) ?
-          (
-            <div>
-              <p>Welcome {auth.currentUser.displayName}! You are now signed-in!</p>
-            </div>
-          )
-          :
-          (
-            <div>
-              <p>You are currently not signed in as a whitelisted user. Please reauthenticate with a whitelisted account.</p>
-            </div>
-          )
-        }
-        <a onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</a>
-        { (profile) ?
-            <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile}/>
-          :
-            <></>
-        }
+        <div className="accountContainer">
+          <div className="authenticationMessage">
+            { (isWhitelisted) ?
+                `Welcome ${auth.currentUser.displayName}! You are now signed-in!`
+              :
+                `You are currently not signed in as a whitelisted user. Please reauthenticate with a whitelisted account.`
+            }
+          </div>
+          <a onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</a>
+          { (profile) ?
+              <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile}/>
+            :
+              <></>
+          }
+        </div>
       </>
     );
   }
   else {
     return (
-      <div>
+      <div className="accountContainer">
         <p>Please sign-in:</p>
         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
       </div>

@@ -6,8 +6,7 @@ import { firebase } from '@firebase/app';
 import { auth, firestore, storage } from "../../firebaseClient";
 
 import "../../utilities.css";
-
-import { get, post } from "../../utilities";
+import "../../public/stylesheets/Create.css";
 
 function Create(props) {
   const [title, setTitle] = useState("");
@@ -70,9 +69,17 @@ function Create(props) {
     firestore.collection("art").add(data)
       .then(artRef => {
         console.log("Art created. Redirecting...");
+        setSaved(true);
         setRedirect(`/art?id=${artRef.id}`);
       });
     return;
+  }
+
+  function CreateStatus() {
+    if (saved)
+      return (<div className="dark-green">Artwork created successfully.</div>);
+    else
+      return null;
   }
 
   return (
@@ -81,31 +88,55 @@ function Create(props) {
         <Redirect to={redirect}/>
         : <></>
       }
-      <form className="" onSubmit={handleSubmit}>
-          <label className="">Title</label>
-          <input required className="" type="text" onChange={updateTitle} value={title}/>
-          <small className="">A title for your artwork.</small>
-          <label className="">Art type</label>
-          <select value={type} onChange={updateType}>
-            <option value="image">Image</option>
-            <option value="video">Video</option>
-            <option value="audio">Audio</option>
-          </select>
-          <label className="">Description</label>
-          <input className="" type="text" onChange={updateDescription} value={description}/>
-          <small className="">A description for your artwork.</small>
-          <label className="">Visibility</label>
-          <select value={visibility} onChange={updateVisibility}>
-            <option value="public">Public</option>
-            <option value="threast">Threast-Only</option>
-          </select>
+      <div className="artworkCreator">
+        <form className="creatorText" onSubmit={handleSubmit}>
+          <div className="formField">
+            <label>
+              <div className="u-bold">Media Type</div>
+              <select value={type} onChange={updateType}>
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+                <option value="audio">Audio</option>
+              </select>
+              <div>
+                <small className="">The type of media that your artwork will use.</small>
+              </div>
+            </label>
+          </div>
+          <div className="formField">
+            <label>
+              <div className="u-bold">Title</div> 
+              <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
+              <div>
+                <small className="">A title for your artwork.</small>
+              </div>
+            </label>
+          </div>
+          <div className="formField">
+            <label>
+              <div className="u-bold">Description</div>
+              <input required className="" type="text" onChange={updateDescription} value={description}/>
+              <div>
+                <small className="">A description for your artwork.</small>
+              </div>
+            </label>
+          </div>
+          <div className="formField">
+            <label>
+              <div className="u-bold">Visibility</div>
+              <select value={visibility} onChange={updateVisibility}>
+                <option value="public">Public</option>
+                <option value="threast">Threast-Only</option>
+              </select>
+              <div>
+                <small className="">Choose who can view your artwork.</small>
+              </div>
+            </label>
+          </div>
           <button type="submit" className="">Create Art</button>
-          { saved ?
-            <span className="dark-green">Art saved successfully.</span>
-          :
-            <span className="gold">The art has not been saved.</span>
-          }
-      </form>
+          <CreateStatus/>
+        </form>
+      </div>
     </>
   );
 }

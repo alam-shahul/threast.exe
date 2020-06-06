@@ -8,6 +8,7 @@ import "firebase/auth";
 
 import { auth, firestore } from "../../firebaseClient";
 import "../../utilities.css";
+import "../../public/stylesheets/Account.css";
 import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import { FileProcessor } from "./FileProcessor.js";
 
@@ -15,7 +16,7 @@ function ProfileEditor(props) {
   const [blurb, setBlurb] = useState(props.profile.blurb);
   const [file, setFile] = useState(null);
   const [photoURL, setPhotoURL] = useState(props.profile.photoURL);
-  const [dataStatus, setDataStatus] = useState("saved");
+  const [dataStatus, setDataStatus] = useState(null);
 
   // This effect is necessary to sync the state change with the upload
   // (although it isn't done perfectly)
@@ -85,23 +86,34 @@ function ProfileEditor(props) {
         setDataStatus("saved");
       });
   } 
+  
+  function ProfileStatus() {
+    if (dataStatus === "saved")
+      return (<div className="dark-green"> Profile saved successfully.</div>);
+    else if (dataStatus === "unsaved")
+      return (<div className="dark-green"> There are unsaved changes to your profile.</div>);
+    else
+      return null;
+  }
 
   return (
     <>
-      <form className="" onSubmit={handleSubmit}>
-        <div className="">
-          <label className="">Blurb</label>
-          <input required className="" type="text" onChange={updateBlurb} value={blurb}/>
-          <small className="">A description for yourself.</small>
+      <div className="profileEditor">
+        <form className="profileText" onSubmit={handleSubmit}>
+          <div className="formField">
+            <label>
+              <div className="u-bold">Blurb</div>
+              <input required className="" type="text" onChange={updateBlurb} value={blurb}/>
+              <div>
+                <small className="">A description for yourself.</small>
+              </div>
+            </label>
+          </div>
           <FileProcessor type="image" initialURL={photoURL} updateFile={updateFile}/>
           <button type="button" className="" onClick={handleSubmit}>Save Profile</button>
-          { dataStatus == "saved" ?
-            <span className="dark-green">Profile saved successfully.</span>
-          :
-            <span className="gold">The profile has not been saved.</span>
-          }
-        </div>
-      </form>
+          <ProfileStatus/>
+        </form>
+      </div>
     </>
   )
 }

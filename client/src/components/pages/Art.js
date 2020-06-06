@@ -47,7 +47,7 @@ function Art(props) {
 
       query.get()
         .then((gallerySnapshot) => {
-          setGallery(gallerySnapshot.docs);
+          setGallery(gallerySnapshot.docs.reverse());
           setId(null);
         });
     }

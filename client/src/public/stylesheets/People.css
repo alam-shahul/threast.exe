@@ -2,44 +2,60 @@
 
 .profileFrame {
   padding: 10% 5% 15% 5%;
-  border: 4px dashed #B33A3A;
   border-radius: 2px;
   transition: 0.3s;
+  background-color: black;
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(255,255,255,.13) 50%, transparent 50%),
+    linear-gradient(90deg, transparent 50%, rgba(255,255,255,.17) 50%),
+    linear-gradient(90deg, transparent 50%, rgba(255,255,255,.19) 50%);
+  background-size: 13px, 29px, 37px, 53px;
 }
 
 .profileFrame:hover {
   filter: brightness(1.25);
 }
 
-.profilePhoto {
+.profileFrame .profilePhoto {
   display:flex;
   align-items:center;
   justify-content:center;
   background-color: black;
   position: relative;
   overflow: hidden;
-  border: 1px solid gray;
 }
 
-.profilePhoto img{
+.profileFrame .profilePhoto img{
   display: block;
   max-width: 100%;
 }
 
-.name {
+.profileFrame .name {
   font-size: 20px;
-  font-family: "Merienda One", cursive;
-  text-align: center;
-  color: black;
+  text-align: left;
+  color: white;
   padding: 10px 0 10px 0;
 }
 
-.blurb {
+.profileFrame .blurb {
   font-size: 12px;
-  text-align: center;
-  color:  grey;
+  text-align: left;
+  color:  var(--gold);
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
+}
+
+.peopleGallery {
+  margin: 20px 0 20px 0;
+}
+
+.peopleContainer {
+  overflow: auto;
+  background:
+    linear-gradient(27deg, transparent, var(--bloodred) 75%);
+  background-color: var(--gold);
+  min-height: 100%;
 }

@@ -1,17 +1,6 @@
 .fileDisplayContainer video,
 .fileDisplayContainer img, 
 .fileDisplayContainer audio {
-  width: 100%;
-}
-
-@media screen and (max-width: 600px) {
-  .fileDisplayContainer {
-    max-width: 75%;
-  }
-}
-
-@media not screen and (max-width: 600px) {
-  .fileDisplayContainer {
-    max-width: 600px;
-  }
+  width: calc(100% - 60px);
+  margin: 30px;
 }

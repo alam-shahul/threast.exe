@@ -8,7 +8,7 @@ import { firebase } from '@firebase/app';
 import { auth, firestore, storage } from "../../firebaseClient";
 
 import "../../utilities.css";
-import Gallery from "../modules/Gallery.js";
+import Profile from "../modules/Profile.js";
 import PeopleGallery from "../modules/PeopleGallery.js";
 import { get, post } from "../../utilities";
 
@@ -21,6 +21,7 @@ function People(props) {
   const [artworks, setArtworks] = useState(null);
   const [peopleGallery, setPeopleGallery] = useState(null);
 
+  console.log(id);
   if (parsed.id) {
     if(!profile || !artworks || (parsed.id != id)) {
       firestore.collection("profiles").doc(parsed.id).get()
@@ -31,9 +32,11 @@ function People(props) {
           firestore.collection("art")
             .orderBy("lastUpdated")
             .where("visibility", "==", "public")
-            .where("profileId", "==", id)
+            .where("profileId", "==", parsed.id)
             .get()
               .then((artworksSnapshot) => {
+                console.log(profile);
+                console.log(parsed.id);
                 console.log(artworksSnapshot.docs);
                 if (artworksSnapshot.docs) {
                   setArtworks(artworksSnapshot.docs);
@@ -46,8 +49,9 @@ function People(props) {
     if(!peopleGallery || id) {
       console.log(peopleGallery);
       console.log(props.user);
-     
-      let query = firestore.collection("profiles");
+    
+      // Alphabetical order 
+      let query = firestore.collection("profiles").orderBy("displayName");
 
       query.get()
         .then((peopleGallerySnapshot) => {
@@ -61,26 +65,7 @@ function People(props) {
   return (
     <>
       { id ?
-          (
-            <>
-              { profile ? 
-                <>
-                  <p>profile</p>
-                  <div>{profile.email}</div>
-                  <div>{profile.displayName}</div>
-                  <div>{profile.blurb}</div>
-                  <img src={profile.photoURL}></img>
-                </>
-                :
-                <div>Not a valid profile!</div>
-              }
-              { artworks ?
-                <Gallery gallery={artworks}/>      
-                :
-                <></>
-              }
-            </>
-          )
+        <Profile profile={profile} artworks={artworks}/>
         :
         <PeopleGallery peopleGallery={peopleGallery}/>
       }

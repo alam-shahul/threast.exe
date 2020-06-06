@@ -61,7 +61,8 @@ function App(props) {
 	    <Navbar 
           user={user}
         />
-	    <Switch >
+        <div className="masterContainer">
+	    <Switch>
           <Route exact path="/">
             <Homepage 
 	          user={user}
@@ -90,7 +91,8 @@ function App(props) {
             />
           </Route>
 	      <NotFound default />
-        </Switch> 
+        </Switch>
+        </div>
 	  </BrowserRouter>
 	</>
   );

@@ -17,15 +17,15 @@ function Homepage(props) {
     <>
       <div className="homepage_container">
         <div id = "cloud_container">
-          <div className="cloud x1"></div>
-          <div className="cloud x2"></div>
-          <div className="cloud x3"></div>
-          <div className="cloud x4"></div>
-          <div className="cloud x5"></div>
-          <div className="cloud x6"></div>
-          <div className="cloud x8"></div>
-          <div className="cloud x9"></div>
-          <div className="cloud x10"></div>
+          <div className="x1 "><div className="cloud"></div></div>
+          <div className="x2 "><div className="cloud"></div></div>
+          <div className="x3 "><div className="cloud"></div></div>
+          <div className="x4 "><div className="cloud"></div></div>
+          <div className="x5 "><div className="cloud"></div></div>
+          <div className="x6 "><div className="cloud"></div></div>
+          <div className="x8 "><div className="cloud"></div></div>
+          <div className="x9 "><div className="cloud"></div></div>
+          <div className="x10"><div className="cloud"></div></div>
         </div>
         <div id="text_container">
           <div id="title">

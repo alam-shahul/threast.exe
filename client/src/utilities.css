@@ -14,7 +14,6 @@
 * much after initial creation.
 */
 
-/* TODO: REPLACE WITH YOUR OWN FONT! */
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
 
 :root {
@@ -24,11 +23,18 @@
   --medgrey: #e0e0e0;
   --grey: #f7f7f7;
   --white: #fff;
+  --gold: #f4c50b;
+  --bloodred: #B33A3A;
+  --dangerred: #660000;
 
   --xs: 4px;
   --s: 8px;
   --m: 16px;
   --l: 24px;
+
+  --navbar-height: 100px;
+  --navbar-height-desktop: 80px;
+
 }
 
 body {
@@ -87,4 +93,14 @@ form {
 
 .u-link:hover {
   color: var(--primary--dim);
+}
+
+.masterContainer {
+  height: calc(100vh - var(--navbar-height));
+}
+
+@media (min-width:550px) {
+  .masterContainer {
+    height: calc(100vh - var(--navbar-height-desktop));
+  }
 }

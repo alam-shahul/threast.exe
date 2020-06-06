@@ -6,6 +6,7 @@
 /*Clouds; tutorial at http://thecodeplayer.com/walkthrough/pure-css3-animated-clouds-background*/
 .homepage_container {
   display: grid;
+  min-height: 100%;
 }
 
 #cloud_container {
@@ -13,9 +14,8 @@
   grid-row: 1;
   z-index: 0;
   overflow: hidden;
-  height: 100vh;
   animation: lightning 10s linear infinite; 
-  background: linear-gradient(#660000, #B33A3A);
+  background: linear-gradient(var(--dangerred), var(--bloodred));
 }
 
 #text_container {
@@ -23,24 +23,23 @@
   grid-row: 1;
   z-index: 1;
   overflow: hidden;
-  height: 100vh;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 14vh;
+  line-height: 14vmin;
   color: white;
 }
 
 #title {
-  font-size: 10vh;
+  font-size: 10vmin;
   font-family: "blackBruno";
 }
 
 .cloud {
   width: 200px;
   height: 60px;
-  background: #FFD700;
+  background: var(--gold);
   position: relative;
 
   border-radius: 200px;
@@ -48,7 +47,7 @@
 
 .cloud:before, .cloud:after {
   content: "";
-  background: #FFD700;
+  background: var(--gold);
   width: 100px;
   height: 80px;
   position: absolute;
@@ -151,18 +150,17 @@
 }
 
 @keyframes lightning {
-  0%   {filter: brightness(0%)  grayscale(100%);}
+  0%   {filter: brightness(30%)  grayscale(70%);}
   1%   {filter: brightness(100%) grayscale(0%);}
-  15%  {filter: brightness(0%)  grayscale(100%);}
-  30%  {filter: brightness(0%)  grayscale(100%);}
+  15%  {filter: brightness(30%)  grayscale(70%);}
+  30%  {filter: brightness(30%)  grayscale(70%);}
   31%  {filter: brightness(100%)  grayscale(0%);}
-  45%  {filter: brightness(0%)  grayscale(100%);}
+  45%  {filter: brightness(30%)  grayscale(70%);}
   46%  {filter: brightness(80%)  grayscale(0%);}
-  60%  {filter: brightness(0%)  grayscale(100%);}
-  80%  {filter: brightness(0%)  grayscale(100%);}
+  60%  {filter: brightness(30%)  grayscale(70%);}
+  80%  {filter: brightness(30%)  grayscale(70%);}
   81%  {filter: brightness(200%)  grayscale(0%);}
-  95%  {filter: brightness(0%)  grayscale(100%);}
-  100% {filter: brightness(0%)  grayscale(100%);}
+  100% {filter: brightness(30%)  grayscale(70%);}
 }
 
 /* Rain?? */

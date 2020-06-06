@@ -13,36 +13,50 @@ function Gallery(props) {
   //const [mode, setMode] = useState(null);
   return (
     <>
-      <StackGrid
-        appear={scaleDown.appear}
-        appeared={scaleDown.appeared}
-        enter={scaleDown.enter}
-        entered={scaleDown.entered}
-        leaved={scaleDown.leaved}
-        monitorImagesLoaded={true}
-        horizontal={false}
-        columnWidth={300}
-        gutterWidth={15}
-        gutterHeight={15}
-      >
-        {props.gallery ?
-          props.gallery.map((artworkSnapshot) => {
-            const artwork = artworkSnapshot.data();
-            return <Link
-                     style={{textDecoration: 'none'}}
-                     key={artworkSnapshot.id}
-                     to={"/art?id=" + artworkSnapshot.id}  
-                   >
-                     <ArtThumbnail
-                        key={artworkSnapshot.id}
-                        artwork={artwork}
-                     />
-                   </Link>
-            })
+      <div className="artContainer">
+        { props.gallery ?
+          ( props.gallery.length > 0 ?
+            ( 
+              <StackGrid
+                appear={scaleDown.appear}
+                appearDelay={50}
+                appeared={scaleDown.appeared}
+                enter={scaleDown.enter}
+                entered={scaleDown.entered}
+                leaved={scaleDown.leaved}
+                monitorImagesLoaded={true}
+                horizontal={false}
+                columnWidth={300}
+                gutterWidth={15}
+                gutterHeight={15}
+                className="gallery"
+              >
+                {props.gallery ?
+                  props.gallery.map((artworkSnapshot) => {
+                    const artwork = artworkSnapshot.data();
+                    return <Link
+                             style={{textDecoration: 'none'}}
+                             key={artworkSnapshot.id}
+                             to={"/art?id=" + artworkSnapshot.id}  
+                           >
+                             <ArtThumbnail
+                                key={artworkSnapshot.id}
+                                artwork={artwork}
+                             />
+                           </Link>
+                    })
+                  :
+                  <></>
+                }
+              </StackGrid>
+            )
+            :
+            <div>No artworks!</div>
+          )
           :
-          <></>
+          <div>Loading...</div>
         }
-      </StackGrid>
+      </div>
     </>
   );
 }
