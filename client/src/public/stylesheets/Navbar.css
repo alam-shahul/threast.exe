@@ -52,7 +52,7 @@
   align-items: center;
   background: rgba(255, 255, 255, 1);
   text-decoration: none;
-  box-shadow: 0 0 2px black;
+  box-shadow: 0 1px 1px -1px black;
 }
 
 @media (min-width:550px) {
@@ -114,7 +114,7 @@
   display:flex;
   flex-direction: column;
   background-color:white;
-  box-shadow: 0 0 2px black;
+  box-shadow: 0 1px 1px -1px black;
 }
 
 .burgerLinks a {

@@ -90,6 +90,7 @@
   overflow: auto;
   background-image: url("../images/corkBoard.jpg");
   background-size: 600px;
+  flex-grow: 1;
   min-height: 100%;
 }
 

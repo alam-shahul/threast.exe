@@ -1,10 +1,11 @@
 .profileContainer {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   min-height: 100%;
 }
 
 .textContainer {
-  margin: 20px;
+  padding: 20px;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -13,6 +14,13 @@
 
 .textContainer .name {
   font-size: min(8vw, 40px);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.textContainer .class {
+  font-size: min(6vw, 30px);
+  color: #1859f1;
   font-weight: bold;
   margin-bottom: 10px;
 }
