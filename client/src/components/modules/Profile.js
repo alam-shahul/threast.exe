@@ -13,6 +13,7 @@ function Profile(props) {
                    <>
                      <div className="textContainer">
                        <div className="name">{props.profile.displayName}</div>
+                       <div className="class">{props.profile.class}</div>
                        <div className="blurb">{props.profile.blurb}</div>
                      </div>
                      <img src={props.profile.photoURL}/>

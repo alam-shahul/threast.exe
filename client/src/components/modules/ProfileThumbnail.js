@@ -11,6 +11,7 @@ function ProfileThumbnail(props) {
         <img src={props.profile.photoURL}/>
       </div>
       <div className="name">{props.profile.displayName}</div>
+      <div className="class">{props.profile.class}</div>
       <div className="blurb">{props.profile.blurb}</div>
     </div>
   );

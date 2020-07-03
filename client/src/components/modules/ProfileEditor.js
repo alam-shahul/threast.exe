@@ -66,8 +66,8 @@ function ProfileEditor(props) {
             setPhotoURL(downloadURL);
             const newProfile = Object.assign({}, props.profile, {photoURL: downloadURL})
             props.updateParent(newProfile);
-            if (props.profile.photoURL)
-              deleteMediaByURL(photoURL);
+            // if (props.profile.photoURL)
+            //   deleteMediaByURL(photoURL);
             console.log('File available at', downloadURL);
             setDataStatus("saving");
           });

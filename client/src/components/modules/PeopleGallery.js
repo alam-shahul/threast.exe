@@ -10,10 +10,36 @@ import "../../public/stylesheets/People.css";
 
 
 function PeopleGallery(props) {
-  //const [mode, setMode] = useState(null);
+  // Make list of unique classes
+
+  const uniqueClasses = [...new Set(props.peopleGallery.map(profile => profile.data().class))].sort().reverse();
+  const initialSelectedClass = uniqueClasses[0];
+
+  function filterByClass(peopleGallery, selectedClass) {
+    return peopleGallery.filter(profile => (profile.data().class === selectedClass));
+  }
+
+  const [selectedClass, setSelectedClass] = useState(initialSelectedClass);
+  const [subgallery, setSubgallery] = useState(filterByClass(props.peopleGallery, initialSelectedClass));
+
+  function changeClass(event) {
+    setSelectedClass(event.target.value);
+    setSubgallery(filterByClass(props.peopleGallery, event.target.value));
+  }
+
   return (
     <>
       <div className="peopleContainer">
+        { (selectedClass && uniqueClasses) ?
+          <select value={selectedClass} onChange={changeClass}>
+            { uniqueClasses.map((classOption) =>
+                (<option value={classOption}>{classOption}</option>)
+              )
+            }
+          </select>
+          :
+          <></>
+        }
         <StackGrid
           appear={fadeDown.appear}
           appeared={fadeDown.appeared}
@@ -29,8 +55,8 @@ function PeopleGallery(props) {
           gutterHeight={15}
           className="peopleGallery"
         >
-          {props.peopleGallery ?
-            props.peopleGallery.map((profileSnapshot) => {
+          {subgallery ?
+            subgallery.map((profileSnapshot) => {
               const profile = profileSnapshot.data();
               return <Link
                        style={{textDecoration: 'none'}}

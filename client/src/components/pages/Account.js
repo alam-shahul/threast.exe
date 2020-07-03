@@ -24,7 +24,8 @@ function Account(props) {
     mockProfile = {
       displayName: profile.displayName,
       blurb: profile.blurb,
-      photoURL: profile.photoURL
+      photoURL: profile.photoURL,
+      class: profile.class
     }
   }
   let isWhitelisted = (!!props.user);
@@ -96,8 +97,8 @@ function Account(props) {
                   `You are currently not signed in as a whitelisted user. Please reauthenticate with a whitelisted account.`
               }
             </div>
-            <a onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</a>
-            { (profile) ?
+            <button onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</button>
+            { (profile && props.user) ?
                 <>
                   <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile} updateParent={setProfile}/>
                   <div className="profilePreview">

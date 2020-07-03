@@ -47,7 +47,6 @@ function People(props) {
   }
   else {
     if(!peopleGallery || id) {
-      console.log(peopleGallery);
       console.log(props.user);
     
       // Alphabetical order 
@@ -55,23 +54,20 @@ function People(props) {
 
       query.get()
         .then((peopleGallerySnapshot) => {
+          // Update people gallery
           setPeopleGallery(peopleGallerySnapshot.docs);
-          console.log(peopleGallerySnapshot.docs);
           setId(null);
         });
     }
   }
 
-  return (
-    <>
-      { id ?
-        <Profile profile={profile} artworks={artworks}/>
-        :
-        <PeopleGallery peopleGallery={peopleGallery}/>
-      }
-    </>
-  );
-
+  if (id)
+    return ( <Profile profile={profile} artworks={artworks}/> );
+  else
+    if (peopleGallery)
+      return ( <PeopleGallery peopleGallery={peopleGallery}/> );
+    else
+      return ( <>Loading...</> );
 }
 
 export default People;
