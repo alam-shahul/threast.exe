@@ -66,8 +66,8 @@ function ProfileEditor(props) {
             setPhotoURL(downloadURL);
             const newProfile = Object.assign({}, props.profile, {photoURL: downloadURL})
             props.updateParent(newProfile);
-            // if (props.profile.photoURL)
-            //   deleteMediaByURL(photoURL);
+            if (props.profile.photoURL)
+              deleteMediaByURL(photoURL);
             console.log('File available at', downloadURL);
             setDataStatus("saving");
           });
@@ -114,7 +114,10 @@ function ProfileEditor(props) {
               </div>
             </label>
           </div>
-          <FileProcessor type="image" initialURL={photoURL} updateFile={updateFile}/>
+          <div className="formField">
+            <div className="u-bold">Profile Picture</div>
+            <FileProcessor type="image" initialURL={photoURL} updateFile={updateFile}/>
+          </div>
           <button type="button" className="" onClick={handleSubmit}>Save Profile</button>
           <ProfileStatus/>
         </form>

@@ -7,7 +7,6 @@ const socket = require("./server-socket");
 
 // gets user from DB, or makes a new account if it doesn't exist yet
 function getOrCreateUser(userQuery) {
-  console.log("Get or create user")
   // the "sub" field means "subject", which is a unique identifier for each user
   console.log(userQuery);
   let userRef = admin.firestore.collection("users").doc(userQuery.uid);
@@ -18,9 +17,9 @@ function getOrCreateUser(userQuery) {
         return userSnapshot.data();
       }
       else {
+        console.log("Creating user");
         let newUser = admin.firestore.collection("profiles").where("email", "==", userQuery.email).get()
           .then((profileSnapshot) => {
-            console.log(profileSnapshot.docs[0].id);
             let data = {
               uid: userQuery.uid,
               email: userQuery.email,
@@ -40,9 +39,10 @@ function getOrCreateUser(userQuery) {
 
 function login(req, res) {
   // First, check if user is whitelisted in Firebase (could also have local list of whitelisted users
-  admin.firestore.collection("whitelist").doc(req.body.email).get()
-    .then((whitelistEntry) => {
-      let isWhitelisted = whitelistEntry.exists;
+  admin.firestore.collection("profiles").where("email", "==", req.body.email).get()
+    .then((matchingProfiles) => {
+      console.log(matchingProfiles.size);
+      let isWhitelisted = (matchingProfiles.size === 1);
       if (isWhitelisted) {
         admin.auth.verifyIdToken(req.body.token)
           .then((decodedToken) => {
@@ -54,7 +54,7 @@ function login(req, res) {
             return getOrCreateUser(userQuery);
           })
           .then((user) => {
-            // persist user in the session
+            // persist user in the session (I don't think this actually works)
             console.log(user);
             req.session.user = user;
             res.send(user);

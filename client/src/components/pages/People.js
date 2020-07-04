@@ -29,10 +29,14 @@ function People(props) {
           let profileData = profileSnapshot.data();
           setProfile(profileData);
           setId(parsed.id);
-          firestore.collection("art")
+          let query = firestore.collection("art")
             .orderBy("lastUpdated")
-            .where("visibility", "==", "public")
-            .where("profileId", "==", parsed.id)
+            .where("profileId", "==", parsed.id);
+
+          if (!props.user)
+            query = query.where("visibility", "==", "public");
+
+          query
             .get()
               .then((artworksSnapshot) => {
                 console.log(profile);

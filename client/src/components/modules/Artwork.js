@@ -203,6 +203,7 @@ function Artwork(props) {
                       </label>
                     </div>
                     <div className="formField">
+                      <div className="u-bold">Media</div>
                       <FileProcessor type={props.artwork.type} initialURL={downloadURL} updateFile={updateFile}/>
                     </div>
                     <button type="submit" className="">Save Art</button>
@@ -215,7 +216,7 @@ function Artwork(props) {
                     <ArtworkStatus/>
                   </form>
                   <div className="editorPreview">
-                    <div>Thumbnail Preview</div>
+                    <div className="u-bold">Thumbnail Preview</div>
                     <ArtThumbnail artwork={mockArtwork}/>
                   </div>
                 </div>
