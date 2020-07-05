@@ -1,81 +1,40 @@
 import React, { useState, useEffect } from "react";
-import GoogleLogin, { GoogleLogout } from "react-google-login";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 import { firebase } from '@firebase/app';
 import "firebase/auth";
 
 import "../../utilities.css";
-import "./Homepage.css";
+import "../../public/stylesheets/Homepage.css";
+
+import { auth, firestore } from "../../firebaseClient";
 
 function Homepage(props) {
-
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
-  useEffect(() => {
-    var unregisterAuthObserver = props.firebaseApp.auth().onAuthStateChanged((user) => {
-        setIsSignedIn(!!user);
-      });
-    return unregisterAuthObserver;
-  });
-
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: 'popup',
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    ],
-    callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: (authResult) => {
-        let currentUser = firebase.auth().currentUser;
-        // console.log(currentUser);
-        let token = currentUser.getIdToken(true);
-        let displayName = currentUser.displayName;
-        let email = currentUser.email;
-        let loginResponse = {"token": token, "displayName": displayName, "email": email}
-        props.handleLogin(loginResponse);
-        return false;
-      }
-    }
-  };
-
+  // TODO: perhaps replace this with a THREE.js animation eventually?
+  // In the long term, will definitely want to replace this animation,
+  // since it is actually so CPU-intensive
   return (
     <>
-      {(!isSignedIn) ?
-      (
-        <div>
-          <p>Please sign-in:</p>
-          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+      <div className="homepage_container">
+        <div id = "cloud_container">
+          <div className="x1 "><div className="cloud"></div></div>
+          <div className="x2 "><div className="cloud"></div></div>
+          <div className="x3 "><div className="cloud"></div></div>
+          <div className="x4 "><div className="cloud"></div></div>
+          <div className="x5 "><div className="cloud"></div></div>
+          <div className="x6 "><div className="cloud"></div></div>
+          <div className="x8 "><div className="cloud"></div></div>
+          <div className="x9 "><div className="cloud"></div></div>
+          <div className="x10"><div className="cloud"></div></div>
         </div>
-      )
-      :
-      // TODO: Is handleLogout working properly here? Also, is this the right place to be doing it?
-      (
-        <div>
-          <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-          <a onClick={() => {firebase.auth().signOut(); props.handleLogout}}>Sign-out</a>
+        <div id="text_container">
+          <div id="title">
+            <div>Danger</div>
+            <div>Third</div>
+            <div>Rail</div>
+          </div>
         </div>
-      )
-      }
-      <h1>Good luck on your project :)</h1>
-      <h2> What we provide in this skeleton</h2>
-      <ul>
-        <li>Google Auth (Skeleton.js & auth.js)</li>
-        <li>Socket Infrastructure (client-socket.js & server-socket.js)</li>
-        <li>User Model (auth.js & user.js)</li>
-      </ul>
-      <h2> What you need to change</h2>
-      <ul>
-        <li>Change the font in utilities.css</li>
-        <li>Change the Frontend CLIENT_ID for Google Auth (Skeleton.js)</li>
-        <li>Change the Server CLIENT_ID for Google Auth (auth.js)</li>
-        <li>Change the Database SRV for Atlas (server.js)</li>
-        <li>Change the Database Name for MongoDB (server.js)</li>
-        <li>Add a favicon to your website at the path client/dist/favicon.ico</li>
-        <li>Update website title in client/dist/index.html</li>
-      </ul>
+      </div>
     </>
   );
 

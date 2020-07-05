@@ -1,0 +1,47 @@
+.accountContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.authenticationMessage {
+  margin: 20px;
+}
+
+.signoutButton {
+  display: inline-block;
+  align-self: center;
+  padding: 0.4em 0.75em 0.4em 0.75em;
+  border-radius: 0.2em;
+  color: white;
+  text-align: center;
+  transition: filter 0.3s;
+  background-color: var(--bloodred);
+}
+
+.signoutButton:hover {
+  filter: brightness(75%);
+  cursor: pointer;
+}
+
+.profileEditor .formField {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.profileEditor .formField textarea{
+  width: 75%;
+}
+
+.profileEditor {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 20px; 
+}
+
+.profilePreview {
+  margin: 20px;
+}
+

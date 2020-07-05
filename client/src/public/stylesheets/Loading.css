@@ -1,0 +1,9 @@
+.loading {
+  margin: 20px;
+  display: flex;
+  font-size: 30px;
+  color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

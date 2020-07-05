@@ -1,0 +1,21 @@
+.fileDisplayContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.fileDisplayContainer video,
+.fileDisplayContainer img, 
+.fileDisplayContainer audio {
+  max-width: 100%;
+  max-height: calc(100vh - var(--navbar-height));
+}
+
+@media (min-width: 550px) {
+  .fileDisplayContainer video,
+  .fileDisplayContainer img, 
+  .fileDisplayContainer audio {
+    max-height: calc(100vh - var(--navbar-height-desktop));
+  }
+}

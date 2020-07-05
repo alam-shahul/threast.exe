@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Router } from "@reach/router";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import NotFound from "./pages/NotFound.js";
 import Homepage from "./pages/Homepage.js";
 import Art from "./pages/Art.js";
+import Create from "./pages/Create.js";
 import People from "./pages/People.js";
-import Profile from "./pages/Profile.js";
-import SignIn from "./pages/SignIn.js";
-
-import { firebase } from '@firebase/app';
-import "firebase/auth";
-import "firebase/firestore";
+import Account from "./pages/Account.js";
+import Navbar from "./Navbar.js";
 
 import "../utilities.css";
 
@@ -17,79 +14,111 @@ import { socket } from "../client-socket.js";
 
 import { get, post } from "../utilities";
 
+import { auth, firestore } from "../firebaseClient";
+
 /**
  * Define the "App" component as a class.
  */
 
 function App(props) {
-  var firebaseConfig = {
-    apiKey: "AIzaSyAvZsDdDGOyMaCHQcXsUDx-85yr9akOhgw",
-    authDomain: "threast-website.firebaseapp.com",
-    databaseURL: "https://threast-website.firebaseio.com",
-    projectId: "threast-website",
-    storageBucket: "threast-website.appspot.com",
-    messagingSenderId: "933380237825",
-    appId: "1:933380237825:web:874189b6c93cdefd"
-  };
+  const storedUser = localStorage.getItem("user");
+  const storedVerificationStatus = localStorage.getItem("isVerified");
+  const storedWhitelistStatus = localStorage.getItem("isWhitelisted");
 
-  if(!firebase.apps.length) {
-    var firebaseInit = firebase.initializeApp(firebaseConfig);
-  }
+  console.log(storedUser);
+  console.log(storedVerificationStatus);
+  console.log(storedWhitelistStatus);
 
-  const [userId, setUserId] = useState(undefined);
-  const [firebaseApp, setFirebaseApp] = useState(firebaseInit);
+  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
+  const [isVerified, setIsVerified] = useState(storedVerificationStatus ? JSON.parse(storedVerificationStatus) : null);
+  const [isWhitelisted, setIsWhitelisted] = useState(storedWhitelistStatus ? JSON.parse(storedVerificationStatus) : null);
 
   useEffect(() => {
-    get("/api/whoami").then((user) => {
-      if (user._id) {
-        // they are registed in the database, and currently logged in.
-        setUserId(user._id);
-      }
-    });
-  });
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem("isVerified", JSON.stringify(isVerified));
+  }, [isVerified]);
+
+  useEffect(() => {
+    localStorage.setItem("isWhitelisted", JSON.stringify(isWhitelisted));
+  }, [isWhitelisted]);
 
   var handleLogin = (res) => {
- //console.log(`Logged in as ${res.displayName}`);
-    console.log(res);
-    res.token.then((userToken) => {
-      post("/api/login", { token: userToken, displayName: res.displayName, email: res.email }).then((user) => {
-        setUserId(user.uid);
-        // console.log(userId);
-        post("/api/initsocket", { socketid: socket.id });
-      });
+  //console.log(`Logged in as ${res.displayName}`);
+    var whitelistResult = post("/api/login", { token: res.token, displayName: res.displayName, email: res.email }).then((user) => {
+      setUser(user);
+      setIsVerified(auth.currentUser.emailVerified);
+      post("/api/initsocket", { socketid: socket.id });
+      return true;
+    }).catch((err) => {
+      console.log(err);
+      return false;
     });
+
+    setIsWhitelisted(whitelistResult);
+    return whitelistResult;
   };
 
   var handleLogout = () => {
-    setUserId(undefined);
-    post("/api/logout");
+    post("/api/logout").then(() => {
+      setUser(null);
+    });
   };
 
   return (
-	  <>
-		  <Router>
-		    <Homepage
-			    path="/"
-			    handleLogin={handleLogin}
-			    handleLogout={handleLogout}
-			    userId={userId}
-			    firebaseApp={firebaseApp}
-		    />
-        <Art 
-          path = "/art"
+	<>
+      <BrowserRouter>
+	    <Navbar 
+          user={user}
+	      isVerified={isVerified}
+	      isWhitelisted={isWhitelisted}
         />
-        <People 
-          path = "/people"
-        />
-        <Profile 
-          path = "/profile"
-        />
-        <SignIn 
-          path = "/signin"
-        />
-		    <NotFound default />
-		  </Router>
-	  </>
+        <div className="masterContainer">
+	    <Switch>
+          <Route exact path="/">
+            <Homepage 
+	          user={user}
+	          isVerified={isVerified}
+	          isWhitelisted={isWhitelisted}
+	        />
+          </Route>
+          <Route path="/art">
+            <Art 
+	          user={user}
+	          isVerified={isVerified}
+	          isWhitelisted={isWhitelisted}
+            />
+          </Route>
+          <Route path="/create">
+            <Create
+	          user={user}
+	          isVerified={isVerified}
+	          isWhitelisted={isWhitelisted}
+            />
+          </Route>
+          <Route path="/people">
+            <People 
+	          user={user}
+	          isVerified={isVerified}
+	          isWhitelisted={isWhitelisted}
+            />
+          </Route>
+          <Route path="/account">
+            <Account
+	          handleLogin={handleLogin}
+	          handleLogout={handleLogout}
+	          user={user}
+	          isVerified={isVerified}
+	          isWhitelisted={isWhitelisted}
+            />
+          </Route>
+	      <NotFound default />
+        </Switch>
+        </div>
+	  </BrowserRouter>
+	</>
   );
 }
 

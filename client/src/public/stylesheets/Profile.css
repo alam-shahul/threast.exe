@@ -1,0 +1,58 @@
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.textContainer {
+  padding: 20px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.textContainer .name {
+  font-size: min(8vw, 40px);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.textContainer .class {
+  font-size: min(6vw, 30px);
+  color: #1859f1;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.textContainer .blurb {
+  font-size: min(4vw, 20px);
+  overflow-y: scroll;
+  padding-left: 10px;
+  border-radius: 3px;
+  border-left: 3px solid ;
+}
+
+.profile {
+  display: flex;
+  width: 100%;
+  align-content: center;
+}
+
+.profile .profilePhoto {
+  max-width: 600px;
+  max-height: 600px;
+  height: 100%;
+}
+
+.profile img{
+  max-width: 50vw;
+  max-height: calc(100vh - var(--navbar-height));
+  align-self: center;
+}
+
+@media (min-width:550px) {
+  .profile img{
+    max-height: calc(100vh - var(--navbar-height-desktop));
+  }
+}

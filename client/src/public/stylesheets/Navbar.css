@@ -1,0 +1,139 @@
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  height: var(--navbar-height));
+}
+
+@media (min-width:550px) {
+  .logo {
+    height: calc(var(--navbar-height-desktop));
+  }
+}
+
+.logo span, .logo img {
+    font-size: calc(0.25 * var(--navbar-height));;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 300ms linear 0s;
+    margin: 10px 0 10px 10px;
+}
+
+@media (min-width:550px) {
+  .logo span, .logo img {
+    font-size: calc(0.25 * var(--navbar-height-desktop));
+  }
+}
+
+
+.logo img{
+  height: calc(0.75 * var(--navbar-height));
+}
+
+@media (min-width:550px) {
+  .logo img{
+    height: calc(0.75 * var(--navbar-height-desktop));
+  }
+}
+
+.navbar {
+  position: relative;
+  width: 100%;
+  z-index: 100;
+}
+
+.flexcontainer {
+  display: flex;
+  height: calc(var(--navbar-height));
+  margin: auto;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 1);
+  text-decoration: none;
+  box-shadow: 0 1px 1px -1px black;
+}
+
+@media (min-width:550px) {
+  .flexcontainer{
+    height: calc(var(--navbar-height-desktop));
+  }
+}
+
+.flexcontainer a {
+    font-size: calc(0.25 * var(--navbar-height));;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 300ms linear 0s;
+}
+
+@media (min-width:550px) {
+  .flexcontainer a {
+    font-size: calc(0.25 * var(--navbar-height-desktop));
+  }
+}
+
+.navLinks a {
+  margin-right: 30px;
+}
+.navLinks :hover {
+  color: var(--gold);
+}
+
+.navLinks {
+  display: none;
+}
+
+@media (min-width:550px) {
+.navLinks {
+    display: unset;    
+  }
+}
+
+/* Burger Menu */
+
+.burger .burger-lines,
+.burger .burger-lines:after,
+.burger .burger-lines:before {
+  background-color: black; 
+}
+
+.burger {
+  margin: 1em;
+}
+
+.burger,
+.burgerLinks {
+  display: unset;
+  transition: all 300ms linear 0s;
+}
+
+.burgerLinks {
+  display:flex;
+  flex-direction: column;
+  background-color:white;
+  box-shadow: 0 1px 1px -1px black;
+}
+
+.burgerLinks a {
+  font-size: calc(0.25 * var(--navbar-height));;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 300ms linear 0s;
+}
+
+.burgerLinks a {
+  margin: 20px 20px 20px 20px;
+}
+.burgerLinks :hover {
+  color: var(--gold);
+}
+
+@media (min-width: 550px) {
+  .burger, .burgerLinks {
+    display: none;
+  }
+}

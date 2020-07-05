@@ -21,6 +21,12 @@ const router = express.Router();
 //initialize socket
 const socket = require("./server-socket");
 
+// import Firebase functionality
+const admin = require("./firebaseAdmin");
+
+const stream = require("stream"); 
+
+
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
