@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import VideoThumbnail from 'react-video-thumbnail';
+
 import queryString from 'query-string'
 
 import { firebase } from '@firebase/app';
