@@ -15,7 +15,6 @@ import "../../utilities.css";
 
 function Account(props) {
   const [profile, setProfile] = useState(null);
-  const [artworks, setArtworks] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   let allClear = (isAuthenticated && props.isVerified && props.isWhitelisted);
@@ -37,30 +36,19 @@ function Account(props) {
     return unregisterAuthObserver;
   });
 
-  console.log(allClear);
-  console.log(profile);
-  if (allClear) {
-    if (props.user && !profile) {
-      firestore.collection("profiles").doc(props.user.profileId).get()
-        .then((profileSnapshot) => {
-          let profileData = profileSnapshot.data();
-          setProfile(profileData);
-        });
-    }
-
-    if (props.user && !artworks) {
-      firestore.collection("art")
-        .orderBy("lastUpdated")
-        .where("profileId", "==", props.user.profileId)
-        .get()
-          .then((artworksSnapshot) => {
-            console.log(artworksSnapshot.docs);
-            if (artworksSnapshot.docs) {
-              setArtworks(artworksSnapshot.docs);
+  useEffect(() => {
+    if (allClear) {
+      if (props.user) {
+        firestore.collection("profiles").doc(props.user.profileId).get()
+          .then((profileSnapshot) => {
+            let newProfile = profileSnapshot.data();
+            if (!profile || (profile.email != newProfile.email)) { 
+              setProfile(newProfile);
             }
           });
+      }
     }
-  }
+  });
 
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
@@ -110,28 +98,29 @@ function Account(props) {
     )
   }
 
+  let startQuery;
+  if (props.user) {
+    startQuery = firestore.collection("art")
+      .orderBy("lastUpdated", "desc")
+      .where("profileId", "==", props.user.profileId);
+  }
+
   return (
     <>
       <div className="accountContainer">
         <AuthenticationMessage/>
         { (isAuthenticated) ?
             <>
-              <div className="editorContainer">
-                <button onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign-out</button>
-                { (profile && props.user) ?
-                    <>
-                      <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile} updateParent={setProfile}/>
-                      <div className="profilePreview">
-                        <div>Thumbnail Preview</div>
-                        <ProfileThumbnail profile={mockProfile}/>
-                      </div>
-                    </>
-                  :
-                    <></>
-                }
-              </div>
-              { artworks ?
-                <Gallery gallery={artworks} title={"Your Art"}/>
+              <span className="signoutButton" onClick={() => {setProfile(null); auth.signOut(); props.handleLogout()}}>Sign Out</span>
+              { (profile && props.user && allClear) ?
+                <>
+                  <ProfileEditor uid={props.user.uid} profileId={props.user.profileId} profile={profile} updateParent={setProfile}/>
+                  <div className="profilePreview">
+                    <div className="u-bold">Thumbnail Preview</div>
+                    <ProfileThumbnail profile={mockProfile}/>
+                  </div>
+                  <Gallery startQuery={startQuery} title={"Your Art"}/>
+                </>
                 :
                 <></>
               }

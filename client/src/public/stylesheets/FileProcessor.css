@@ -1,9 +1,15 @@
+.fileDisplayContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
 .fileDisplayContainer video,
 .fileDisplayContainer img, 
 .fileDisplayContainer audio {
-  max-width: 50vw;
+  max-width: 100%;
   max-height: calc(100vh - var(--navbar-height));
-  margin: 30px;
 }
 
 @media (min-width: 550px) {

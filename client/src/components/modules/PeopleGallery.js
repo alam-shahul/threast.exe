@@ -31,12 +31,15 @@ function PeopleGallery(props) {
     <>
       <div className="peopleContainer">
         { (selectedClass && uniqueClasses) ?
-          <select value={selectedClass} onChange={changeClass}>
-            { uniqueClasses.map((classOption) =>
-                (<option value={classOption}>{classOption}</option>)
-              )
-            }
-          </select>
+          <div className="classSelector">
+            <span>Class of </span>
+            <select value={selectedClass} onChange={changeClass}>
+              { uniqueClasses.map((classOption) =>
+                  (<option value={classOption}>{classOption}</option>)
+                )
+              }
+            </select>
+          </div>
           :
           <></>
         }

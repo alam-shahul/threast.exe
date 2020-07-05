@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Redirect } from "react-router-dom";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage } from "../../firebaseClient";
@@ -89,55 +90,53 @@ function Create(props) {
         <Redirect to={redirect}/>
         : <></>
       }
-      <div className="artworkCreator">
-        <form className="creatorText" onSubmit={handleSubmit}>
-          <div className="formField">
-            <label>
-              <div className="u-bold">Media Type</div>
-              <select value={type} onChange={updateType}>
-                <option value="image">Image</option>
-                <option value="video">Video</option>
-                <option value="audio">Audio</option>
-              </select>
-              <div>
-                <small className="">The type of media that your artwork will use.</small>
-              </div>
-            </label>
-          </div>
-          <div className="formField">
-            <label>
-              <div className="u-bold">Title</div> 
-              <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
-              <div>
-                <small className="">A title for your artwork.</small>
-              </div>
-            </label>
-          </div>
-          <div className="formField">
-            <label>
-              <div className="u-bold">Description</div>
-              <input required className="" type="text" onChange={updateDescription} value={description}/>
-              <div>
-                <small className="">A description for your artwork.</small>
-              </div>
-            </label>
-          </div>
-          <div className="formField">
-            <label>
-              <div className="u-bold">Visibility</div>
-              <select value={visibility} onChange={updateVisibility}>
-                <option value="public">Public</option>
-                <option value="threast">Threast-Only</option>
-              </select>
-              <div>
-                <small className="">Choose who can view your artwork.</small>
-              </div>
-            </label>
-          </div>
-          <button type="submit" className="">Create Art</button>
-          <CreateStatus/>
-        </form>
-      </div>
+      <form className="artworkCreator" onSubmit={handleSubmit}>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Media Type</div>
+            <select value={type} onChange={updateType}>
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+              <option value="audio">Audio</option>
+            </select>
+            <div>
+              <small className="">The type of media that your artwork will use.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Title</div> 
+            <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
+            <div>
+              <small className="">A title for your artwork.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Description</div>
+            <TextareaAutosize required className="" onChange={updateDescription} value={description}/>
+            <div>
+              <small className="">A description for your artwork.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Visibility</div>
+            <select value={visibility} onChange={updateVisibility}>
+              <option value="public">Public</option>
+              <option value="threast">Threast-Only</option>
+            </select>
+            <div>
+              <small className="">Choose who can view your artwork.</small>
+            </div>
+          </label>
+        </div>
+        <button type="submit" className="">Create Art</button>
+        <CreateStatus/>
+      </form>
     </>
   );
 }

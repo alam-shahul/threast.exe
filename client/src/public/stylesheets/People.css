@@ -62,7 +62,7 @@
 }
 
 .peopleGallery {
-  margin: 20px 0 20px 0;
+  margin: 20px;
 }
 
 .peopleContainer {
@@ -71,4 +71,17 @@
     linear-gradient(27deg, transparent, var(--bloodred) 75%);
   background-color: var(--gold);
   min-height: 100%;
+}
+
+.classSelector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  font-size: 20px;
+  color: white;
+}
+
+.classSelector span {
+  white-space: pre;
 }

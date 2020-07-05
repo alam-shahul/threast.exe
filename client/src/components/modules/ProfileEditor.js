@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GoogleLogin, { GoogleLogout } from "react-google-login";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Link } from "react-router-dom";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { firebase } from '@firebase/app';
 import "firebase/auth";
@@ -103,25 +104,23 @@ function ProfileEditor(props) {
 
   return (
     <>
-      <div className="profileEditor">
-        <form className="profileText" onSubmit={handleSubmit}>
-          <div className="formField">
-            <label>
-              <div className="u-bold">Blurb</div>
-              <input required className="" type="text" onChange={updateBlurb} value={blurb}/>
-              <div>
-                <small className="">A description for yourself.</small>
-              </div>
-            </label>
-          </div>
-          <div className="formField">
-            <div className="u-bold">Profile Picture</div>
-            <FileProcessor type="image" initialURL={photoURL} updateFile={updateFile}/>
-          </div>
-          <button type="button" className="" onClick={handleSubmit}>Save Profile</button>
-          <ProfileStatus/>
-        </form>
-      </div>
+      <form className="profileEditor" onSubmit={handleSubmit}>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Blurb</div>
+            <TextareaAutosize required className="" onChange={updateBlurb} value={blurb}/>
+            <div>
+              <small className="">A description for yourself.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <div className="u-bold">Profile Picture</div>
+          <FileProcessor type="image" initialURL={props.profile.photoURL} updateFile={updateFile}/>
+        </div>
+        <button type="button" className="" onClick={handleSubmit}>Save Profile</button>
+        <ProfileStatus/>
+      </form>
     </>
   )
 }

@@ -15,9 +15,14 @@ function Navbar(props){
 
   const isLoggedIn = (!!props.user);
 
-  function handleClick(e) {
+  function handleBurgerClick(e) {
     e.preventDefault();
-    console.log("clicked");
+    console.log("clicked burger");
+    setBurgerOpen(!burgerOpen);
+  }
+
+  function handleLinkClick(e) {
+    console.log("clicked link");
     setBurgerOpen(!burgerOpen);
   }
 
@@ -34,12 +39,12 @@ function Navbar(props){
             </Link>
           </div>
           <div className="navLinks">
-            <Links isLoggedIn={isLoggedIn}/>
+            <Links isLoggedIn={isLoggedIn} handleClick={handleLinkClick}/>
           </div>
-          <Burger isOpen={ burgerOpen } direction="up" onClick={handleClick}/>
+          <Burger isOpen={ burgerOpen } direction="up" onClick={handleBurgerClick}/>
         </div>
         { burgerOpen ? 
-            <BurgerMenu isLoggedIn={isLoggedIn} onClick={handleClick}/>
+            <BurgerMenu isLoggedIn={isLoggedIn} handleClick={handleLinkClick}/>
           :
           <></>
         }

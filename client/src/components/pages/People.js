@@ -10,6 +10,7 @@ import { auth, firestore, storage } from "../../firebaseClient";
 import "../../utilities.css";
 import Profile from "../modules/Profile.js";
 import PeopleGallery from "../modules/PeopleGallery.js";
+import Loading from "../modules/Loading.js";
 import { get, post } from "../../utilities";
 
 function People(props) {
@@ -18,35 +19,16 @@ function People(props) {
 
   const [id, setId] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [artworks, setArtworks] = useState(null);
   const [peopleGallery, setPeopleGallery] = useState(null);
 
-  console.log(id);
   if (parsed.id) {
-    if(!profile || !artworks || (parsed.id != id)) {
+    if (!profile || parsed.id != id) {
       firestore.collection("profiles").doc(parsed.id).get()
         .then((profileSnapshot) => {
           let profileData = profileSnapshot.data();
           setProfile(profileData);
           setId(parsed.id);
-          let query = firestore.collection("art")
-            .orderBy("lastUpdated")
-            .where("profileId", "==", parsed.id);
-
-          if (!props.user)
-            query = query.where("visibility", "==", "public");
-
-          query
-            .get()
-              .then((artworksSnapshot) => {
-                console.log(profile);
-                console.log(parsed.id);
-                console.log(artworksSnapshot.docs);
-                if (artworksSnapshot.docs) {
-                  setArtworks(artworksSnapshot.docs);
-                }
-              });
-        });
+      });
     }
   }
   else {
@@ -64,14 +46,22 @@ function People(props) {
         });
     }
   }
+  
+  if (id) {
+    let startQuery = firestore.collection("art")
+      .orderBy("lastUpdated", "desc")
+      .where("profileId", "==", id);
 
-  if (id)
-    return ( <Profile profile={profile} artworks={artworks}/> );
+    if (!props.user)
+      startQuery = startQuery.where("visibility", "==", "public");
+
+    return ( <Profile profile={profile} startQuery={startQuery}/> );
+  }
   else
     if (peopleGallery)
       return ( <PeopleGallery peopleGallery={peopleGallery}/> );
     else
-      return ( <>Loading...</> );
+      return ( <Loading/> );
 }
 
 export default People;

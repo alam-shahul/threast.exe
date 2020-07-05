@@ -1,16 +1,18 @@
-.creatorText {
-  margin: 20px;
-  max-width: 100%;
+.artworkCreator .formField {
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.creatorText .formField {
-  margin-bottom: 20px;
+.artworkCreator .formField input,
+.artworkCreator .formField textarea {
+  width: 75%;
 }
 
 .artworkCreator {
   display:flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; 
+  align-items: flex-start;
+  margin: 20px;
 }
 

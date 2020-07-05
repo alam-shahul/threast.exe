@@ -55,7 +55,7 @@
   font-family: "Merienda One", cursive;
   text-align: center;
   color:  black;
-  margin: 10px 0 10px 0;
+  margin: 20px;
 }
 
 .galleryTitle {
@@ -68,16 +68,21 @@
 
 
 .description {
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   color:  grey;
-  margin-bottom: 10px;
+  margin: 0 20px 20px 20px;
 }
 
 .author {
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   color:  grey;
+  margin: 0 20px 20px 20px;
+}
+
+.author span {
+  white-space: pre;
 }
 
 .gallery {
@@ -94,29 +99,67 @@
   min-height: 100%;
 }
 
-.artworkText {
-  margin: 20px;
-  max-width: 100%;
+.buttonContainer {
+  display: flex;
+  justify-content: center;
 }
 
-.artworkText .formField {
+.buttonContainer span {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  padding: 0.75em;
+  margin: 0.2em;
+  line-height: 1em;
+  font-size: 25px;
+  border-radius: 100%;
+  color: white;
+  text-align: center;
+  transition: filter 0.3s;
+}
+
+.buttonContainer span:hover {
+  filter: brightness(75%);
+  cursor: pointer;
+}
+
+.nextButton {
+  background-color: var(--gold);
+}
+
+.previousButton {
+  background-color: var(--bloodred);
+}
+
+.artworkContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.artworkEditor .formField {
   margin-bottom: 20px;
 }
+
+.artworkEditor .formField input,
+.artworkEditor .formField textarea {
+  width: 75%;
+}
+
+.buttonContainer button {
+  margin-right: 10px;
+}
+
 
 .artworkEditor {
   display:flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; 
+  align-items: stretch;
+  margin: 20px;
 }
 
 .editorPreview {
   margin: 20px;
-}
-
-.artworkDisplay {
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; 
 }

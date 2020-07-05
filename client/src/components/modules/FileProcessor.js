@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import "../../public/stylesheets/FileProcessor.css";
-import default_media from "../../public/images/underConstruction.gif";
 
 export function FileDisplay(props) {
   const type = props.type;
@@ -11,12 +10,13 @@ export function FileDisplay(props) {
         <div>No media yet!</div>
       </div>
     )
-  else if (type == "image")
+  else if (type == "image") {
       return (
         <div className = "fileDisplayContainer">
           <img src={props.URL}/>
         </div>
       );
+  }
   else if (type == "video")
       return (
         <div className = "fileDisplayContainer">
@@ -35,6 +35,10 @@ export function FileDisplay(props) {
 
 export function FileProcessor(props) {
   const [URL, setURL] = useState(props.initialURL);
+
+  useEffect(() => {
+    setURL(props.initialURL);
+  }, [props.initialURL])
 
   function FileUpload(props) {
     const type = props.type;

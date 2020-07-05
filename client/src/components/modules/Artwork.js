@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage} from "../../firebaseClient";
@@ -156,8 +157,10 @@ function Artwork(props) {
   function ArtworkStatus() {
     if (dataStatus == "saved")
       return (<div className="dark-green">Artwork saved successfully.</div>);
+    else if (dataStatus == "saved")
+      return (<div className="dark-green">Artwork is being saved...</div>);
     else if (dataStatus == "deleting")
-      return (<div>Artwork is being deleted.</div>)
+      return (<div>Artwork is being deleted...</div>)
     else if (dataStatus == "deleted")
       return (<div>Artwork has been deleted.</div>)
     else
@@ -166,76 +169,75 @@ function Artwork(props) {
 
   return (
     <>
-      <div className="">
+      <div className="artworkContainer">
         { isOwner ?
             (
               <>
-                <div className="artworkEditor">
-                  <form className="artworkText" onSubmit={handleSubmit}>
-                    <div className="formField">
-                      <label>
-                        <div className="u-bold">Title</div> 
-                        <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
-                        <div>
-                          <small className="">A title for your artwork.</small>
-                        </div>
-                      </label>
-                    </div>
-                    <div className="formField">
-                      <label>
-                        <div className="u-bold">Description</div>
-                        <input required className="" type="text" onChange={updateDescription} value={description}/>
-                        <div>
-                          <small className="">A description for your artwork.</small>
-                        </div>
-                      </label>
-                    </div>
-                    <div className="formField">
-                      <label>
-                        <div className="u-bold">Visibility</div>
-                        <select value={visibility} onChange={updateVisibility}>
-                          <option value="public">Public</option>
-                          <option value="threast">Threast-Only</option>
-                        </select>
-                        <div>
-                          <small className="">Choose who can view your artwork.</small>
-                        </div>
-                      </label>
-                    </div>
-                    <div className="formField">
-                      <div className="u-bold">Media</div>
-                      <FileProcessor type={props.artwork.type} initialURL={downloadURL} updateFile={updateFile}/>
-                    </div>
+                <form className="artworkEditor" onSubmit={handleSubmit}>
+                  <div className="formField">
+                    <label>
+                      <div className="u-bold">Title</div> 
+                      <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
+                      <div>
+                        <small className="">A title for your artwork.</small>
+                      </div>
+                    </label>
+                  </div>
+                  <div className="formField">
+                    <label>
+                      <div className="u-bold">Description</div>
+                      <TextareaAutosize required className="" onChange={updateDescription} value={description}/>
+                      <div>
+                        <small className="">A description for your artwork.</small>
+                      </div>
+                    </label>
+                  </div>
+                  <div className="formField">
+                    <label>
+                      <div className="u-bold">Visibility</div>
+                      <select value={visibility} onChange={updateVisibility}>
+                        <option value="public">Public</option>
+                        <option value="threast">Threast-Only</option>
+                      </select>
+                      <div>
+                        <small className="">Choose who can view your artwork.</small>
+                      </div>
+                    </label>
+                  </div>
+                  <div className="formField">
+                    <div className="u-bold">Media</div>
+                    <FileProcessor type={props.artwork.type} initialURL={downloadURL} updateFile={updateFile}/>
+                  </div>
+                  <div className="buttonContainer">
                     <button type="submit" className="">Save Art</button>
                     <button type="button" className="" onClick={deleteArtwork}>Delete Art</button>
-                    { redirect ?
-                      <Redirect to={redirect}/>
-                      :
-                      <></>
-                    }
                     <ArtworkStatus/>
-                  </form>
-                  <div className="editorPreview">
-                    <div className="u-bold">Thumbnail Preview</div>
-                    <ArtThumbnail artwork={mockArtwork}/>
                   </div>
+                  { redirect ?
+                    <Redirect to={redirect}/>
+                    :
+                    <></>
+                  }
+                </form>
+                <div className="editorPreview">
+                  <div className="u-bold">Thumbnail Preview</div>
+                  <ArtThumbnail artwork={mockArtwork}/>
                 </div>
               </>
             ) :
             (
               <>
-                <div className="artworkDisplay">
-                  <div className="artworkText">
-                    <div className="title">{title}</div>
-                    <div className="description">{description}</div>
-                    <div className="author">Posted by
-                      <Link to={"/people?id=" + props.artwork.profileId}>
-                        <div>{props.artwork.ownerName}</div>
-                      </Link>
-                    </div>
+                <div className="artworkText">
+                  <div className="title">{title}</div>
+                  <div className="description">{description}</div>
+                  <div className="author">
+                    <span>Posted by </span>
+                    <Link to={"/people?id=" + props.artwork.profileId}>
+                      {props.artwork.ownerName}
+                    </Link>
                   </div>
-                  <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
                 </div>
+                <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
               </>
             )
         }
