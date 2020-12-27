@@ -8,47 +8,48 @@ import { firebase } from '@firebase/app';
 import { auth, firestore, storage } from "../../firebaseClient";
 
 import "../../utilities.css";
-import "../../public/stylesheets/Art.css";
-import Gallery from "../modules/Gallery.js";
-import Artwork from "../modules/Artwork.js";
+import "../../public/stylesheets/Blog.css";
+import BlogGallery from "../modules/BlogGallery.js";
+import Blogpost from "../modules/Blogpost.js";
 import Loading from "../modules/Loading.js";
 
 import { get, post } from "../../utilities";
 
-function Art(props) {
+function Blog(props) {
   const url = useLocation().search;
   const parsed = queryString.parse(url);
 
   const [id, setId] = useState(null);
-  const [artwork, setArtwork] = useState(null);
+  const [blogpost, setBlogpost] = useState(null);
 
   // TODO: All of this seems a bit hacky... you have basically implemented a state machine. Is that necessary?
   // Perhaps you just need to use the useEffect hook?
   if (parsed.id) {
-    if(!artwork || (parsed.id != id)) {
-      firestore.collection("art").doc(parsed.id).get()
-        .then((artSnapshot) => {
-          setArtwork(artSnapshot.data());
+    if(!blogpost || (parsed.id != id)) {
+      firestore.collection("blog").doc(parsed.id).get()
+        .then((blogSnapshot) => {
+          setBlogpost(blogSnapshot.data());
           setId(parsed.id);
         });
     }
   }
+
   else if (id) {
-    setArtwork(null);
+    setBlogpost(null);
     setId(null);
   }
 
   let startQuery = (props.user) ?
-    firestore.collection("art").orderBy("lastUpdated", "desc")
+    firestore.collection("blogs").orderBy("lastUpdated", "desc")
     :     
-    firestore.collection("art").orderBy("lastUpdated", "desc").where("visibility", "==", "public");
+    firestore.collection("blogs").orderBy("lastUpdated", "desc").where("visibility", "==", "public");
 
   return (
     <>
       { id ?
-        (artwork ? <Artwork artwork={artwork} id={id} user={props.user}/> : <Loading/>):
+        (blogpost ? <Blogpost blogpost={blogpost} id={id} user={props.user}/> : <Loading/>):
         <>
-          <Gallery startQuery={startQuery} title={"3E Community Art"}/>
+          <BlogGallery startQuery={startQuery} title={"Words of Wisdom? Sentences of Smartness?"}/>
         </> 
       }     
     </>
@@ -56,4 +57,4 @@ function Art(props) {
 
 }
 
-export default Art;
+export default Blog;
