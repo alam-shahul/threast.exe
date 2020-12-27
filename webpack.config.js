@@ -29,7 +29,7 @@ module.exports = {
     publicPath: "/",
     filename: "bundle.js",
   },
-  devtool: "",
+  devtool: "nosources-source-map",
   module: {
     rules: [
       {
