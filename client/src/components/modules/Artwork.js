@@ -13,16 +13,7 @@ import ArtworkEditor from "./ArtworkEditor.js";
 import LinkButton from "./LinkButton.js";
 
 function Artwork(props) {
-  const [redirect, setRedirect] = useState(null);
-  const [title, setTitle] = useState(props.artwork.title);
-  const [description, setDescription] = useState(props.artwork.description);
-  const [file, setFile] = useState(null);
-  const [downloadURL, setDownloadURL] = useState(props.artwork.downloadURL);
-  const [visibility, setVisibility] = useState(props.artwork.visibility);
-
-  // The dataStatus state has five possible values: "saved", "unsaved", "saving", "deleting" and "deleted"
-  const [dataStatus, setDataStatus] = useState("saved");
-
+  
   const isOwner = (props.user && props.artwork.ownerId === props.user.uid); 
 
   return (
@@ -37,8 +28,8 @@ function Artwork(props) {
             (
               <>
                 <div className="artworkText">
-                  <div className="title">{title}</div>
-                  <div className="description">{description}</div>
+                  <div className="title">{props.artwork.title}</div>
+                  <div className="description">{props.artwork.description}</div>
                   <div className="author">
                     <span>Posted by </span>
                     <Link to={"/people?id=" + props.artwork.profileId}>

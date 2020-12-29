@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from "react";
-import GoogleLogin, { GoogleLogout } from "react-google-login";
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
 
 import { firebase } from '@firebase/app';
-import "firebase/auth";
+import { auth, firestore, storage} from "../../firebaseClient";
 
-import { auth, firestore } from "../../firebaseClient";
 import "../../utilities.css";
-import "../../public/stylesheets/Account.css";
 import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
-import { FileProcessor } from "./FileProcessor.js";
+import "../../public/stylesheets/Art.css";
+import { FileDisplay, FileProcessor } from "./FileProcessor.js";
+
+import LinkButton from "./LinkButton.js";
+import ArtThumbnail from "./ArtThumbnail.js";
+
 
 function BlogpostEditor(props) {
+  const [redirect, setRedirect] = useState(null);
+  const [title, setTitle] = useState(props.blogpost.title);
   const [content, setContent] = useState(props.blogpost.content);
   const [file, setFile] = useState(null);
   const [thumbnailURL, setThumbnailURL] = useState(props.blogpost.thumbnailURL);
-  const [dataStatus, setDataStatus] = useState(null);
+  const [visibility, setVisibility] = useState(props.blogpost.visibility);
+  
+  // The dataStatus state has five possible values: "saved", "unsaved", "saving", "deleting" and "deleted"
+  const [dataStatus, setDataStatus] = useState("saved");
+  
+  var mockBlogpost = {
+    title: title,
+    content: content,
+    thumbnailType: props.blogpost.thumbnailType,
+    thumbnailURL: thumbnailURL
+  }
 
   // This effect is necessary to sync the state change with the upload
   // (although it isn't done perfectly)
   useEffect(() => {
     if (dataStatus == "saving") {
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      saveProfile(timestamp);
+      saveBlogpost(timestamp);
     }
   }, [dataStatus]);
-
-  function updateContent(e) {
-    setContent(e.target.value);
-   
-    const newBlog = Object.assign({}, props.blogpost, {content: e.target.value})
-    props.updateParent(newBlog);
-    setDataStatus("unsaved");
-  }
 
   function updateTitle(e) {
     if (!e.target.value) {
@@ -46,12 +51,12 @@ function BlogpostEditor(props) {
     setTitle(e.target.value);
     setDataStatus("unsaved");
   }
-
-  function updateDescription(e) {
-    setDescription(e.target.value);
+  
+  function updateContent(e) {
+    setContent(e.target.value);
     setDataStatus("unsaved");
   }
-
+  
   function updateVisibility(e) {
     setVisibility(e.target.value);
     setDataStatus("unsaved");
@@ -66,6 +71,13 @@ function BlogpostEditor(props) {
       const reader = new FileReader();
       reader.onload = (e) => {
         updateDisplayURL(e.target.result);
+        mockBlogpost = {
+          title: title,
+          content: content,
+          thumbnailType: props.blogpost.thumbnailType,
+          thumbnailURL: e.target.result
+        }
+        console.log(mockBlogpost);
       }   
       reader.readAsDataURL(file);
       
@@ -73,24 +85,22 @@ function BlogpostEditor(props) {
       setDataStatus("unsaved");
     } 
   }
-
+  
   function handleSubmit(e) {
     e.preventDefault();
-
+ 
     if (dataStatus == "unsaved") {
-      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
       if (file != null) {
-        const filepath = `blogThumbnails/${props.uid}/${Date.now()}`;
-        let uploadTask = uploadToFirestore(filepath, file, props.uid);
+        const filepath = `${props.blogpost.thumbnailType}/${Date.now()}`;
+        let uploadTask = uploadToFirestore(filepath, file, props.blogpost.ownerId);
         
         uploadTask.then(function(snapshot) {
-          snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            setThumbnailURL(downloadURL);
-            const newBlog = Object.assign({}, props.blogpost, {thumbnailURL: downloadURL})
-            props.updateParent(newBlog);
-            if (props.blogpost.thumbnailURL)
+          snapshot.ref.getDownloadURL().then(function(newThumbnailURL) {
+            if (thumbnailURL)
               deleteMediaByURL(thumbnailURL);
-            console.log('File available at', downloadURL);
+ 
+            setThumbnailURL(newThumbnailURL);
+            console.log('File available at', newThumbnailURL);
             setDataStatus("saving");
           });
         });
@@ -100,50 +110,116 @@ function BlogpostEditor(props) {
       }
     }
   }
-
+ 
   function saveBlogpost(timestamp) {
-    let blogpostRef = firestore.collection("blogs").doc(props.blogpostId);
+    console.log("Why not");
+    const blogName = `${props.id}`;
+    let blogRef = firestore.collection("blogs").doc(blogName);
     let data = {
-      content: blurb,
-      thumbnailURL: photoURL,
+      lastUpdated: timestamp,
+      title: title,
+      thumbnailType: props.blogpost.type,
+      content: content,
+      thumbnailURL: thumbnailURL,
+      ownerName: props.blogpost.ownerName,
+      ownerId: props.blogpost.ownerId,
+      profileId: props.blogpost.profileId,
+      visibility: visibility
     };
-    let blogpost = blogpostRef.update(data)
-      .then(blogpostSnapshot => {
+    let blog = blogRef.set(data)
+      .then(blogSnapshot => {
         console.log("Blog saved.");
         setDataStatus("saved");
       });
-  } 
+    }
   
+  function deleteBlogpost() {
+    if (!props.id)
+      return;
+
+    const blogName = `${props.id}`;
+    let blogRef = firestore.collection("blogs").doc(blogName);
+   
+    if (thumbnailURL)
+      deleteMediaByURL(thumbnailURL);
+ 
+    // Delete the file
+    setDataStatus("deleting");
+    blogRef.delete().then(function() {
+      // File deleted successfully
+      console.log("Blogpost deleted!");
+      setDataStatus("deleted");
+      setRedirect("/account");
+    }).catch(function(error) {
+      // Uh-oh, an error occurred!
+      console.log(error);
+    }); 
+  } 
+
   function BlogpostStatus() {
-    if (dataStatus === "saved")
-      return (<div className="dark-green"> Blogpost saved successfully.</div>);
-    else if (dataStatus === "unsaved")
-      return (<div className="dark-green"> There are unsaved changes to your blogpost.</div>);
+    if (dataStatus == "saved")
+      return (<div className="dark-green">Blogpost saved successfully.</div>);
+    else if (dataStatus == "saved")
+      return (<div className="dark-green">Blogpost is being saved...</div>);
+    else if (dataStatus == "deleting")
+      return (<div>Blogpost is being deleted...</div>)
+    else if (dataStatus == "deleted")
+      return (<div>Blogpost has been deleted.</div>)
     else
-      return null;
+      return (<div className="gold">The blogpost has not been saved.</div>);
   }
+
 
   return (
     <>
-      <form className="profileEditor" onSubmit={handleSubmit}>
+      <form className="artworkEditor" onSubmit={handleSubmit}>
         <div className="formField">
           <label>
-            <div className="u-bold">Blurb</div>
-            <TextareaAutosize required className="" onChange={updateBlurb} value={blurb}/>
+            <div className="u-bold">Title</div> 
+            <input required="required" className="" type="text" onChange={updateTitle} value={title}/>
             <div>
-              <small className="">A description for yourself.</small>
+              <small className="">A title for your blogpost.</small>
             </div>
           </label>
         </div>
         <div className="formField">
-          <div className="u-bold">Profile Picture</div>
-          <FileProcessor type="image" initialURL={props.profile.photoURL} updateFile={updateFile}/>
+          <label>
+            <div className="u-bold">Content</div>
+            <TextareaAutosize required className="" onChange={updateContent} value={content}/>
+            <div>
+              <small className="">Your blogpost content!.</small>
+            </div>
+          </label>
         </div>
-        <button type="button" className="" onClick={handleSubmit}>Save Profile</button>
-        <ProfileStatus/>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Visibility</div>
+            <select value={visibility} onChange={updateVisibility}>
+              <option value="public">Public</option>
+              <option value="threast">Threast-Only</option>
+            </select>
+            <div>
+              <small className="">Choose who can view your blogpost.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <div className="u-bold">Media</div>
+          <FileProcessor type={props.blogpost.thumbnailType} initialURL={thumbnailURL} updateFile={updateFile}/>
+        </div>
+        <div className="buttonContainer">
+          <button type="submit" className="">Save Blog</button>
+          <button type="button" className="" onClick={deleteBlogpost}>Delete Blog</button>
+          <BlogpostStatus/>
+        </div>
+        { redirect ?
+          <Redirect to={redirect}/>
+          :
+          <></>
+        }
       </form>
     </>
-  )
+  );
 }
 
 export default BlogpostEditor;

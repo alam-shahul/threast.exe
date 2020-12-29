@@ -26,7 +26,7 @@ function Blog(props) {
   // Perhaps you just need to use the useEffect hook?
   if (parsed.id) {
     if(!blogpost || (parsed.id != id)) {
-      firestore.collection("blog").doc(parsed.id).get()
+      firestore.collection("blogs").doc(parsed.id).get()
         .then((blogSnapshot) => {
           setBlogpost(blogSnapshot.data());
           setId(parsed.id);

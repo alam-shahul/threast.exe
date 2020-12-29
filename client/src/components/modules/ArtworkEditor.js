@@ -24,13 +24,6 @@ function ArtworkEditor(props) {
   
   // The dataStatus state has five possible values: "saved", "unsaved", "saving", "deleting" and "deleted"
   const [dataStatus, setDataStatus] = useState("saved");
-
-  var mockArtwork = {
-    title: title,
-    description: description,
-    type: props.artwork.type,
-    downloadURL: downloadURL
-  }
   
   var mockArtwork = {
     title: title,

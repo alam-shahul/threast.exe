@@ -146,7 +146,7 @@ function BlogGallery(props) {
                   </StackGrid>
                 )
                 :
-                <div>No artworks!</div>
+                <div>No blogposts!</div>
               }
             </>
           )
