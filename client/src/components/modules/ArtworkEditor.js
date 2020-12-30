@@ -159,7 +159,7 @@ function ArtworkEditor(props) {
   function ArtworkStatus() {
     if (dataStatus == "saved")
       return (<div className="dark-green">Artwork saved successfully.</div>);
-    else if (dataStatus == "saved")
+    else if (dataStatus == "saving")
       return (<div className="dark-green">Artwork is being saved...</div>);
     else if (dataStatus == "deleting")
       return (<div>Artwork is being deleted...</div>)

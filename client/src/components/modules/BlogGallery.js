@@ -6,7 +6,6 @@ const { scaleDown } = transitions;
 import { firebase } from '@firebase/app';
 
 import BlogThumbnail from "./BlogThumbnail.js";
-import "../../public/stylesheets/Blog.css";
 import Loading from "./Loading.js";
 
 function BlogGallery(props) {

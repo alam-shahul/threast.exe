@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import audio_thumbnail from "../../public/images/audio_wave.png";
 import default_thumbnail from "../../public/images/underConstruction.gif";
-import "../../public/stylesheets/Art.css";
 const video_thumbnail = "https://firebasestorage.googleapis.com/v0/b/threast-website.appspot.com/o/image%2F1593875454910?alt=media&token=2702fb3d-0bae-479d-b54d-0f3ca665c2a4";
 
 function BlogThumbnail(props) {
@@ -27,7 +26,7 @@ function BlogThumbnail(props) {
       </div>
       <div className="title">{props.blogpost.title}</div>
       { props.blogpost.tagline ?
-        <div className="content-preview">{props.blogpost.tagline}</div>
+        <div className="tagline">{props.blogpost.tagline}</div>
         :
         <></>
       }

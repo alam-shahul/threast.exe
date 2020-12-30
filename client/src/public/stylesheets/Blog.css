@@ -50,7 +50,7 @@
   width: 100%;
 }
 
-.title {
+.polaroidFrame div.title, .blogHeader div.title {
   font-size: 20px;
   font-family: "Merienda One", cursive;
   text-align: center;
@@ -71,13 +71,6 @@
   font-size: 14px;
   text-align: center;
   color:  grey;
-  margin: 0 20px 20px 20px;
-}
-
-.content{
-  font-size: 14px;
-  text-align: center;
-  color:  black;
   margin: 0 20px 20px 20px;
 }
 
@@ -126,3 +119,14 @@
   margin: 20px;
 }
 
+.editorContainer {
+  border: 1px solid black;
+  border-radius: 3px;
+  color: #cccccc;
+  background: #2d2d2d;
+}
+
+.editorInput {
+  font-family: '"Fira code", "Fira Mono", monospace';
+  font-size: 1em;
+}

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage} from "../../firebaseClient";
 
 import "../../utilities.css";
 import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
-import "../../public/stylesheets/Art.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 import BlogpostEditor from "./BlogpostEditor.js";
 import LinkButton from "./LinkButton.js";
@@ -38,7 +39,9 @@ function Blogpost(props) {
                   </div>
                   <FileDisplay type="image" URL={props.blogpost.thumbnailURL}/>
                 </div>
-                <div className="content">{props.blogpost.content}</div>
+                <div className="content">
+                  <ReactMarkdown plugins={[gfm]} children={props.blogpost.content} />
+                </div>
               </>
             )
         }

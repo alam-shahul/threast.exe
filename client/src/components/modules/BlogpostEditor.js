@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
+import MarkdownEditor from './MarkdownEditor.js';
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage} from "../../firebaseClient";
 
 import "../../utilities.css";
 import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
-import "../../public/stylesheets/Art.css";
+import "../../public/stylesheets/Blog.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 
 import LinkButton from "./LinkButton.js";
-import ArtThumbnail from "./ArtThumbnail.js";
-
+import CodeBlock from "./CodeBlock.js";
 
 function BlogpostEditor(props) {
   const [redirect, setRedirect] = useState(null);
@@ -58,8 +60,8 @@ function BlogpostEditor(props) {
     setDataStatus("unsaved");
   }
 
-  function updateContent(e) {
-    setContent(e.target.value);
+  function updateContent(content) {
+    setContent(content);
     setDataStatus("unsaved");
   }
   
@@ -165,7 +167,7 @@ function BlogpostEditor(props) {
   function BlogpostStatus() {
     if (dataStatus == "saved")
       return (<div className="dark-green">Blogpost saved successfully.</div>);
-    else if (dataStatus == "saved")
+    else if (dataStatus == "saving")
       return (<div className="dark-green">Blogpost is being saved...</div>);
     else if (dataStatus == "deleting")
       return (<div>Blogpost is being deleted...</div>)
@@ -178,7 +180,7 @@ function BlogpostEditor(props) {
 
   return (
     <>
-      <form className="artworkEditor" onSubmit={handleSubmit}>
+      <form className="blogpostEditor" onSubmit={handleSubmit}>
         <div className="formField">
           <label>
             <div className="u-bold">Title</div> 
@@ -199,15 +201,6 @@ function BlogpostEditor(props) {
         </div>
         <div className="formField">
           <label>
-            <div className="u-bold">Content</div>
-            <TextareaAutosize required className="" onChange={updateContent} value={content}/>
-            <div>
-              <small className="">Your blogpost content!</small>
-            </div>
-          </label>
-        </div>
-        <div className="formField">
-          <label>
             <div className="u-bold">Visibility</div>
             <select value={visibility} onChange={updateVisibility}>
               <option value="public">Public</option>
@@ -221,6 +214,28 @@ function BlogpostEditor(props) {
         <div className="formField">
           <div className="u-bold">Thumbnail</div>
           <FileProcessor type="image" initialURL={thumbnailURL} updateFile={updateFile}/>
+        </div>
+        <div className="formField">
+          <label>
+            <div className="u-bold">Content</div>
+            <MarkdownEditor
+              content={content}
+              onChange={updateContent}
+            />
+            <div className="markdownPreview">
+              <ReactMarkdown
+                className="markdownPreview"
+                source={content}
+                skipHtml={false}
+                escapeHtml={true}
+                //renderers={{code: CodeBlock}}
+                plugins={[gfm]}
+              />
+            </div>
+            <div>
+              <small className="">Your blogpost content!</small>
+            </div>
+          </label>
         </div>
         <div className="buttonContainer">
           <button type="submit" className="">Save Blog</button>
