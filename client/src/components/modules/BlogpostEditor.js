@@ -17,6 +17,7 @@ import ArtThumbnail from "./ArtThumbnail.js";
 function BlogpostEditor(props) {
   const [redirect, setRedirect] = useState(null);
   const [title, setTitle] = useState(props.blogpost.title);
+  const [tagline, setTagline] = useState(props.blogpost.tagline);
   const [content, setContent] = useState(props.blogpost.content);
   const [file, setFile] = useState(null);
   const [thumbnailURL, setThumbnailURL] = useState(props.blogpost.thumbnailURL);
@@ -27,8 +28,8 @@ function BlogpostEditor(props) {
   
   var mockBlogpost = {
     title: title,
+    tagline: tagline,
     content: content,
-    thumbnailType: props.blogpost.thumbnailType,
     thumbnailURL: thumbnailURL
   }
 
@@ -52,6 +53,11 @@ function BlogpostEditor(props) {
     setDataStatus("unsaved");
   }
   
+  function updateTagline(e) {
+    setTagline(e.target.value);
+    setDataStatus("unsaved");
+  }
+
   function updateContent(e) {
     setContent(e.target.value);
     setDataStatus("unsaved");
@@ -73,8 +79,8 @@ function BlogpostEditor(props) {
         updateDisplayURL(e.target.result);
         mockBlogpost = {
           title: title,
+          tagline: tagline,
           content: content,
-          thumbnailType: props.blogpost.thumbnailType,
           thumbnailURL: e.target.result
         }
         console.log(mockBlogpost);
@@ -91,7 +97,7 @@ function BlogpostEditor(props) {
  
     if (dataStatus == "unsaved") {
       if (file != null) {
-        const filepath = `${props.blogpost.thumbnailType}/${Date.now()}`;
+        const filepath = `${"blogpostThumbnails"}/${Date.now()}`;
         let uploadTask = uploadToFirestore(filepath, file, props.blogpost.ownerId);
         
         uploadTask.then(function(snapshot) {
@@ -118,7 +124,7 @@ function BlogpostEditor(props) {
     let data = {
       lastUpdated: timestamp,
       title: title,
-      thumbnailType: props.blogpost.type,
+      tagline: tagline,
       content: content,
       thumbnailURL: thumbnailURL,
       ownerName: props.blogpost.ownerName,
@@ -184,10 +190,19 @@ function BlogpostEditor(props) {
         </div>
         <div className="formField">
           <label>
+            <div className="u-bold">Tagline</div>
+            <TextareaAutosize required className="" onChange={updateTagline} value={tagline}/>
+            <div>
+              <small className="">A tagline for your blogpost.</small>
+            </div>
+          </label>
+        </div>
+        <div className="formField">
+          <label>
             <div className="u-bold">Content</div>
             <TextareaAutosize required className="" onChange={updateContent} value={content}/>
             <div>
-              <small className="">Your blogpost content!.</small>
+              <small className="">Your blogpost content!</small>
             </div>
           </label>
         </div>
@@ -204,8 +219,8 @@ function BlogpostEditor(props) {
           </label>
         </div>
         <div className="formField">
-          <div className="u-bold">Media</div>
-          <FileProcessor type={props.blogpost.thumbnailType} initialURL={thumbnailURL} updateFile={updateFile}/>
+          <div className="u-bold">Thumbnail</div>
+          <FileProcessor type="image" initialURL={thumbnailURL} updateFile={updateFile}/>
         </div>
         <div className="buttonContainer">
           <button type="submit" className="">Save Blog</button>

@@ -58,3 +58,71 @@
   margin: 20px;
 }
 
+.galleryTitle {
+  font-size: min(8vw, 40px);
+  font-family: "Merienda One", cursive;
+  text-align: center;
+  color:  black;
+  margin: 10px 0 10px 0;
+}
+
+
+.tagline{
+  font-size: 14px;
+  text-align: center;
+  color:  grey;
+  margin: 0 20px 20px 20px;
+}
+
+.content{
+  font-size: 14px;
+  text-align: center;
+  color:  black;
+  margin: 0 20px 20px 20px;
+}
+
+.author {
+  font-size: 14px;
+  text-align: center;
+  color:  grey;
+  margin: 0 20px 20px 20px;
+}
+
+.author span {
+  white-space: pre;
+}
+
+.gallery {
+  margin: 20px 0 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.blogpostContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.blogpostEditor .formField {
+  margin-bottom: 20px;
+}
+
+.blogpostEditor .formField input,
+.blogpostEditor .formField textarea {
+  width: 75%;
+}
+
+.blogpostEditor {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  margin: 20px;
+}
+
+.editorPreview {
+  margin: 20px;
+}
+

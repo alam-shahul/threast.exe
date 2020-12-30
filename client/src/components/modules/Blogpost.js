@@ -18,26 +18,27 @@ function Blogpost(props) {
 
   return (
     <>
-      <div className="artworkContainer">
+      <div className="blogContainer">
         { isOwner ?
             (
               <>
-                <BlogpostEditor id={props.user.uid} blogpost={props.blogpost}/>
+                <BlogpostEditor id={props.id} blogpost={props.blogpost}/>
               </>
             ) :
             (
               <>
-                <div className="artworkText">
+                <div className="blogHeader">
                   <div className="title">{props.blogpost.title}</div>
-                  <div className="description">{props.blogpost.content}</div>
+                  <div className="tagline">{props.blogpost.tagline}</div>
                   <div className="author">
                     <span>Posted by </span>
                     <Link to={"/people?id=" + props.blogpost.profileId}>
                       {props.blogpost.ownerName}
                     </Link>
                   </div>
+                  <FileDisplay type="image" URL={props.blogpost.thumbnailURL}/>
                 </div>
-                <FileDisplay type={props.blogpost.thumbnailType} URL={props.blogpost.thumbnailURL}/>
+                <div className="content">{props.blogpost.content}</div>
               </>
             )
         }

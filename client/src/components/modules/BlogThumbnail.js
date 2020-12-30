@@ -23,10 +23,14 @@ function BlogThumbnail(props) {
   return (
     <div className="polaroidFrame">
       <div className="polaroidImage">
-        <ThumbnailDisplay type={props.blogpost.thumbnailType} thumbnailURL={props.blogpost.thumbnailURL}/>
+        <ThumbnailDisplay type="image" thumbnailURL={props.blogpost.thumbnailURL}/>
       </div>
       <div className="title">{props.blogpost.title}</div>
-      <div className="content-preview">{props.blogpost.content + "..."}</div>
+      { props.blogpost.tagline ?
+        <div className="content-preview">{props.blogpost.tagline}</div>
+        :
+        <></>
+      }
     </div>
   );
 }

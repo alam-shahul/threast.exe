@@ -22,7 +22,7 @@ function Artwork(props) {
         { isOwner ?
             (
               <>
-                <ArtworkEditor id={props.user.uid} artwork={props.artwork}/>
+                <ArtworkEditor id={props.id} artwork={props.artwork}/>
               </>
             ) :
             (
