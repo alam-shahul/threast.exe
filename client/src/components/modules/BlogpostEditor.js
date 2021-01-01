@@ -14,7 +14,7 @@ import "../../public/stylesheets/Blog.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 
 import LinkButton from "./LinkButton.js";
-import CodeBlock from "./CodeBlock.js";
+import BlogpostViewer from "./BlogpostViewer.js";
 
 function BlogpostEditor(props) {
   const [redirect, setRedirect] = useState(null);
@@ -218,18 +218,10 @@ function BlogpostEditor(props) {
         <div className="formField">
           <label>
             <div className="u-bold">Content</div>
-            <MarkdownEditor
-              content={content}
-              onChange={updateContent}
-            />
-            <div className="markdownPreview">
-              <ReactMarkdown
-                className="markdownPreview"
-                source={content}
-                skipHtml={false}
-                escapeHtml={true}
-                //renderers={{code: CodeBlock}}
-                plugins={[gfm]}
+            <div className="monacoWrapper">
+              <MarkdownEditor
+                content={content}
+                onChange={updateContent}
               />
             </div>
             <div>
@@ -242,6 +234,7 @@ function BlogpostEditor(props) {
           <button type="button" className="" onClick={deleteBlogpost}>Delete Blog</button>
           <BlogpostStatus/>
         </div>
+        <BlogpostViewer id={props.id} blogpost={props.blogpost}/>
         { redirect ?
           <Redirect to={redirect}/>
           :

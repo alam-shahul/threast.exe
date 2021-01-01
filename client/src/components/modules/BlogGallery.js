@@ -90,7 +90,7 @@ function BlogGallery(props) {
 
   return (
     <>
-      <div className="artContainer">
+      <div className="blogContainer">
         { gallery ?
           (
             <>
@@ -111,20 +111,7 @@ function BlogGallery(props) {
               </div>
               { gallery.length > 0 ?
                 ( 
-                  <StackGrid
-                    appear={scaleDown.appear}
-                    appearDelay={50}
-                    appeared={scaleDown.appeared}
-                    enter={scaleDown.enter}
-                    entered={scaleDown.entered}
-                    leaved={scaleDown.leaved}
-                    monitorImagesLoaded={true}
-                    horizontal={false}
-                    columnWidth={300}
-                    gutterWidth={15}
-                    gutterHeight={15}
-                    className="gallery"
-                  >
+                  <div className="gallery">
                     { gallery ?
                       gallery.map((blogpostSnapshot) => {
                         const blogpost = blogpostSnapshot.data();
@@ -142,7 +129,7 @@ function BlogGallery(props) {
                       :
                       <></>
                     }
-                  </StackGrid>
+                  </div>
                 )
                 :
                 <div>No blogposts!</div>

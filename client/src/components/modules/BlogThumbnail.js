@@ -20,16 +20,17 @@ function BlogThumbnail(props) {
   }
 
   return (
-    <div className="polaroidFrame">
-      <div className="polaroidImage">
-        <ThumbnailDisplay type="image" thumbnailURL={props.blogpost.thumbnailURL}/>
-      </div>
+    <div className="blogpostFrame">
       <div className="title">{props.blogpost.title}</div>
       { props.blogpost.tagline ?
         <div className="tagline">{props.blogpost.tagline}</div>
         :
         <></>
       }
+      <div className="author">{props.blogpost.ownerName}</div>
+      <div className="blogpostImage">
+        <ThumbnailDisplay type="image" thumbnailURL={props.blogpost.thumbnailURL}/>
+      </div>
     </div>
   );
 }

@@ -3,17 +3,33 @@ import Prism from 'prismjs/components/prism-core';
 import TextareaAutosize from 'react-autosize-textarea';
 import MonacoEditor from "react-monaco-editor";
 
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-markup';
-import 'prismjs/components/prism-markdown';
-import 'prismjs/themes/prism-tomorrow.css'
-
 function MarkdownEditor(props) {
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [props.content]);
+  const [markdownEditor, setMarkdownEditor] = useState(null);
 
-  const options = {};
+  function editorDidMount(editor, monaco) {
+    console.log('editorDidMount', editor, monaco);
+    setMarkdownEditor(editor);
+  }
+
+  function handleResize() {
+    markdownEditor.layout();
+  }
+
+  useEffect(() => {
+    // initiate the event handler
+    window.addEventListener("resize", handleResize)
+
+    // this will clean up the event every time the component is re-rendered
+    return function cleanup() {
+      window.removeEventListener("resize", handleResize);
+    }
+  })
+
+  const options = {
+    scrollbar: {
+      alwaysConsumeMouseWheel: false
+    }
+  };
 
   return (
       <MonacoEditor
@@ -23,6 +39,7 @@ function MarkdownEditor(props) {
         value={props.content}
         options={options}
         onChange={props.onChange}
+        editorDidMount={editorDidMount}
       />
   );
 };

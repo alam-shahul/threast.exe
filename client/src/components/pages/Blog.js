@@ -49,7 +49,7 @@ function Blog(props) {
       { id ?
         (blogpost ? <Blogpost blogpost={blogpost} id={id} user={props.user}/> : <Loading/>):
         <>
-          <BlogGallery startQuery={startQuery} title={"Words of Wisdom? Sentences of Smartness?"}/>
+          <BlogGallery startQuery={startQuery} title={"Latest Blogposts"}/>
         </> 
       }     
     </>
