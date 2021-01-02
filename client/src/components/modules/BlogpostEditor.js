@@ -30,6 +30,7 @@ function BlogpostEditor(props) {
   const [file, setFile] = useState(null);
   const [thumbnailURL, setThumbnailURL] = useState(props.blogpost.thumbnailURL);
   const [visibility, setVisibility] = useState(props.blogpost.visibility);
+  const [savedBlog, setSavedBlog] = useState(props.blogpost);
   
   // The dataStatus state has five possible values: "saved", "unsaved", "saving", "deleting" and "deleted"
   const [dataStatus, setDataStatus] = useState("saved");
@@ -140,6 +141,7 @@ function BlogpostEditor(props) {
       profileId: props.blogpost.profileId,
       visibility: visibility
     };
+    setSavedBlog(data);
     let blog = blogRef.set(data)
       .then(blogSnapshot => {
         console.log("Blog saved.");
@@ -273,7 +275,7 @@ function BlogpostEditor(props) {
           <button type="button" className="" onClick={deleteBlogpost}>Delete Blog</button>
           <BlogpostStatus/>
         </div>
-        <BlogpostViewer id={props.id} blogpost={props.blogpost}/>
+        <BlogpostViewer id={props.id} blogpost={savedBlog}/>
         { redirect ?
           <Redirect to={redirect}/>
           :
