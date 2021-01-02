@@ -27,8 +27,9 @@ function MarkdownEditor(props) {
 
   const options = {
     scrollbar: {
-      alwaysConsumeMouseWheel: false
-    }
+      alwaysConsumeMouseWheel: false,
+    },
+    wordWrap: "on",
   };
 
   return (

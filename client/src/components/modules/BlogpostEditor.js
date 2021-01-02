@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
+
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import Tex from '@matejmazur/react-katex';
+import 'katex/dist/katex.min.css';
+import math from 'remark-math';
+
+
 import MarkdownEditor from './MarkdownEditor.js';
 
 import { firebase } from '@firebase/app';
@@ -177,6 +183,23 @@ function BlogpostEditor(props) {
       return (<div className="gold">The blogpost has not been saved.</div>);
   }
 
+  function renderParagraph(props) {
+    const { children } = props;
+  
+    if (children && children[0]
+      && children.length === 1
+      && children[0].props
+      && children[0].props.src) { // rendering media without p wrapper
+  
+      return children;
+    }
+  
+    return <p>{children}</p>;
+  }
+
+  function renderImage(props) {
+    return <img {...props} style={{maxWidth: '100%'}} />
+  }
 
   return (
     <>
@@ -218,11 +241,27 @@ function BlogpostEditor(props) {
         <div className="formField">
           <label>
             <div className="u-bold">Content</div>
-            <div className="monacoWrapper">
-              <MarkdownEditor
-                content={content}
-                onChange={updateContent}
-              />
+            <div className="editorWrapper">
+              <div className="monacoWrapper">
+                <MarkdownEditor
+                  content={content}
+                  onChange={updateContent}
+                />
+              </div>
+              <div className="monacoPreview">
+                <ReactMarkdown
+                  plugins={[gfm, math]}
+                  children={content}
+                  renderers={{
+                    paragraph: renderParagraph,
+                    image: renderImage,
+                    inlineMath: ({value}) => <Tex math={value} />,
+                    math: ({value}) => <Tex block math={value} />
+                  }}
+                  skipHtml={false}
+                  escapeHtml={true}
+                />
+              </div>
             </div>
             <div>
               <small className="">Your blogpost content!</small>
