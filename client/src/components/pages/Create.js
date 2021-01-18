@@ -130,7 +130,7 @@ function Create(props) {
             <div className="formField">
               <label>
                 <div className="u-bold">Tagline</div>
-                <TextareaAutosize required className="" onChange={updateDescription} value={description}/>
+                <TextareaAutosize required className="" onChange={updateTagline} value={description}/>
                 <div>
                   <small className="">A tagline for your blogpost.</small>
                 </div>

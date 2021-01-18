@@ -242,7 +242,7 @@ function BlogpostEditor(props) {
         </div>
         <div className="formField">
           <label>
-            <div className="u-bold">Content</div>
+            <div className="u-bold">Content Editor and Live Preview</div>
             <div className="editorWrapper">
               <div className="monacoWrapper">
                 <MarkdownEditor
@@ -265,9 +265,6 @@ function BlogpostEditor(props) {
                 />
               </div>
             </div>
-            <div>
-              <small className="">Your blogpost content!</small>
-            </div>
           </label>
         </div>
         <div className="buttonContainer">
@@ -275,6 +272,7 @@ function BlogpostEditor(props) {
           <button type="button" className="" onClick={deleteBlogpost}>Delete Blog</button>
           <BlogpostStatus/>
         </div>
+        <div className="u-bold">Blogpost Preview</div>
         <BlogpostViewer id={props.id} blogpost={savedBlog}/>
         { redirect ?
           <Redirect to={redirect}/>

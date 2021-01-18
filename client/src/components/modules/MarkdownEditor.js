@@ -34,7 +34,7 @@ function MarkdownEditor(props) {
 
   return (
       <MonacoEditor
-        height="600"
+        height="50vh"
         language="markdown"
         theme="vs-dark"
         value={props.content}

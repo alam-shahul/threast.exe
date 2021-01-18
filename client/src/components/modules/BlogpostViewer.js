@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
 
+import { firebase } from '@firebase/app';
+import { auth, firestore, storage} from "../../firebaseClient";
+
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import Tex from '@matejmazur/react-katex';
@@ -10,7 +13,7 @@ import math from 'remark-math';
 
 import default_thumbnail from "../../public/images/underConstruction.gif";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
-import LinkButton from "./LinkButton.js";
+import CommentSection from "./CommentSection.js";
 
 function BlogpostViewer(props) {
   function renderParagraph(props) {
@@ -58,6 +61,8 @@ function BlogpostViewer(props) {
             escapeHtml={true}
           />
         </div>
+        <div className="commentDivider"></div>
+        <CommentSection user={props.user} parentId={props.id} blogpost={props.blogpost}/>
       </div>
     </>
   );
