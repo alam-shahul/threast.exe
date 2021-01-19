@@ -10,7 +10,6 @@ import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import "../../public/stylesheets/Art.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 
-import LinkButton from "./LinkButton.js";
 import ArtThumbnail from "./ArtThumbnail.js";
 
 
@@ -112,7 +111,6 @@ function ArtworkEditor(props) {
   }
  
   function saveArtwork(timestamp) {
-    console.log("Why not");
     const artName = `${props.id}`;
     let artRef = firestore.collection("art").doc(artName);
     let data = {
@@ -126,12 +124,29 @@ function ArtworkEditor(props) {
       profileId: props.artwork.profileId,
       visibility: visibility
     };
+
     let art = artRef.set(data)
       .then(artSnapshot => {
         console.log("Art saved.");
         setDataStatus("saved");
       });
+    if (visibility != props.artwork.visibility) {
+      const newVisibility = {
+        visibility: visibility
+      }
+      
+      firestore.collection("comments").where("parentId", '==', props.id).get().then(response => {
+        let batch = firestore.batch();
+        response.docs.forEach((doc) => {
+          const docRef = firestore.collection("comments").doc(doc.id);
+          batch.update(docRef, newVisibility);
+        })
+        batch.commit().then(() => {
+          console.log(`updated all comments`);
+        })
+      })
     }
+  }
   
   function deleteArtwork() {
     if (!props.id)

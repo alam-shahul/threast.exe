@@ -48,7 +48,7 @@ function CommentSection(props){
     <div className="commentSection">
       <div className="title">Comments</div>
       { props.user ?
-        <CommentForm title="Start a new thread" user={props.user} slug={props.id} parentId={props.parentId} visibility={props.blogpost.visibility} replyId={null} visualCleanup={() => null}/>
+        <CommentForm title="Start a new thread" user={props.user} slug={props.id} parentId={props.parentId} subject={props.subject} replyId={null} visualCleanup={() => null}/>
         :
         <></>
       }
@@ -66,7 +66,7 @@ function CommentSection(props){
                   children={children}
                   photoURLMap={photoURLMap}
                   comment={comment}
-                  blogpost={props.blogpost}
+                  subject={props.subject}
                   slug={props.id}
                   user={props.user}
                 />

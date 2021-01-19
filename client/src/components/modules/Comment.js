@@ -37,7 +37,7 @@ function ReplyDisplay(props) {
                 >
                   Cancel
                 </button>
-                <CommentForm title="Your reply" user={props.user} slug={props.slug} parentId={props.comment.parentId} visibility={props.blogpost.visibility} replyId={props.comment.id} visualCleanup={() => setShowReplyBox(false)}/>
+                <CommentForm title="Your reply" user={props.user} slug={props.slug} parentId={props.comment.parentId} subject={props.subject} replyId={props.comment.id} visualCleanup={() => setShowReplyBox(false)}/>
               </div>
             ) : (
               <button className="btn bare" onClick={() => setShowReplyBox(true)}>
@@ -52,7 +52,6 @@ function ReplyDisplay(props) {
 }
 
 function Comment(props) {
-  console.log(props);
   return (
     <div className="commentBox">
       <SingleComment photoURL={props.photoURLMap[props.comment.ownerId]}comment={props.comment} />

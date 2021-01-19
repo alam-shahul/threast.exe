@@ -18,7 +18,8 @@ function CommentForm(props) {
       replyId: props.replyId,
       firstPosted: timestamp,
       lastUpdated: timestamp,
-      visibility: props.visibility
+      visibility: props.subject.visibility,
+      subjectOwnerId: props.subject.ownerId
     }
 
     firestore.collection("comments").add(comment)

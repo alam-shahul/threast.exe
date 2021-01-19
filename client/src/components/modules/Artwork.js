@@ -10,7 +10,7 @@ import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import "../../public/stylesheets/Art.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 import ArtworkEditor from "./ArtworkEditor.js";
-import LinkButton from "./LinkButton.js";
+import CommentSection from "./CommentSection.js";
 
 function Artwork(props) {
   
@@ -22,7 +22,7 @@ function Artwork(props) {
         { isOwner ?
             (
               <>
-                <ArtworkEditor id={props.id} artwork={props.artwork}/>
+                <ArtworkEditor id={props.id} user={props.user} artwork={props.artwork}/>
               </>
             ) :
             (
@@ -38,6 +38,8 @@ function Artwork(props) {
                   </div>
                 </div>
                 <FileDisplay type={props.artwork.type} URL={props.artwork.downloadURL}/>
+                <div className="commentDivider"></div>
+                <CommentSection user={props.user} parentId={props.id} subject={props.artwork} />
               </>
             )
         }

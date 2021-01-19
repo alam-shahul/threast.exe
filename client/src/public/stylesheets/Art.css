@@ -133,12 +133,10 @@
 }
 
 .artworkContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
 }
+
+
 
 .artworkEditor .formField {
   margin-bottom: 20px;

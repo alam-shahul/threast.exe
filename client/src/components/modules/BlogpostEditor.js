@@ -19,7 +19,6 @@ import { deleteMediaByURL, uploadToFirestore } from "../../utilities";
 import "../../public/stylesheets/Blog.css";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 
-import LinkButton from "./LinkButton.js";
 import BlogpostViewer from "./BlogpostViewer.js";
 
 function BlogpostEditor(props) {
@@ -127,7 +126,6 @@ function BlogpostEditor(props) {
   }
  
   function saveBlogpost(timestamp) {
-    console.log("Why not");
     const blogName = `${props.id}`;
     let blogRef = firestore.collection("blogs").doc(blogName);
     let data = {
@@ -147,7 +145,24 @@ function BlogpostEditor(props) {
         console.log("Blog saved.");
         setDataStatus("saved");
       });
+
+    if (visibility != props.blogpost.visibility) {
+      const newVisibility = {
+        visibility: visibility
+      }
+      
+      firestore.collection("comments").where("parentId", '==', props.id).get().then(response => {
+        let batch = firestore.batch();
+        response.docs.forEach((doc) => {
+          const docRef = firestore.collection("comments").doc(doc.id);
+          batch.update(docRef, newVisibility);
+        })
+        batch.commit().then(() => {
+          console.log(`updated all comments`);
+        })
+      })
     }
+  }
   
   function deleteBlogpost() {
     if (!props.id)

@@ -16,6 +16,7 @@ import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 import CommentSection from "./CommentSection.js";
 
 function BlogpostViewer(props) {
+  console.log(props);
   function renderParagraph(props) {
     const { children } = props;
   
@@ -62,7 +63,7 @@ function BlogpostViewer(props) {
           />
         </div>
         <div className="commentDivider"></div>
-        <CommentSection user={props.user} parentId={props.id} blogpost={props.blogpost}/>
+        <CommentSection user={props.user} parentId={props.id} subject={props.blogpost}/>
       </div>
     </>
   );
