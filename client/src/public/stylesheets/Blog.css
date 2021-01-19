@@ -2,13 +2,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 .blogpostFrame {
-  padding: 30px 30px 30px 30px;
-  margin-top: 20px;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+
+  margin-bottom: 20px;
+  padding: 20px 20px 20px 20px;
+  width: 80vw;
+
   border-top: 4px solid rgba(220, 255, 255, 0.8);
   border-left: 4px solid rgba(220, 255, 255, 1);
   border-right: 4px solid rgba(220, 255, 255, 0.2);
   border-bottom: 4px solid rgba(220, 255, 255, 0.4);
-  width: 60vw;
   background-color: rgba(220, 255, 255, 0.6);
   background-image: repeating-linear-gradient(45deg, transparent 5px, rgba(200, 220, 220, 0.5) 5px, rgba(200, 220, 220, 0.5) 10px,
     transparent 10px, transparent 35px, rgba(200, 220, 220, 0.5) 35px, rgba(200, 220, 220, 0.5) 40px,
@@ -24,25 +29,31 @@
     transparent 80px, transparent 90px, hsla(5, 53%, 63%, 0.5) 90px, hsla(5, 53%, 63%, 0.5) 110px,
     transparent 110px, transparent 140px, rgba(200, 220, 220, 0.5) 140px, rgba(200, 220, 220, 0.5) 160px
   );
+  transition: 0.3s;
+}
+
+.blogpostFrame:hover {
+  filter: brightness(1.05);
+}
+
+.blogpostFrameText {
+  font-size: min(3.6vw, 18px);
+  color: gray;
+  margin-right: 20px;
+  min-width: 66%;
 }
 
 .blogpostImage {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position: relative;
-  overflow: hidden;
 }
 
-.blogpostImage img{
-  display: block;
-  max-height: 500px;
-  max-width: 100%;
+.blogpostImage img {
+  height: min(120px, 30vw);
+  width: 100%;
+  object-fit: contain;
 }
 
 .blogpostFrame .title,
-.blogpostFrame .description,
-.blogpostFrame .author {
+.blogpostFrame .tagline {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -50,7 +61,7 @@
 }
 
 .blogpostFrame div.title {
-  font-size: min(8vw, 40px);
+  font-size: min(6vw, 30px);
   font-weight: 450;
   color: rgba(35, 0, 0, 1); 
 }
@@ -61,17 +72,9 @@
   margin-bottom: 12px;
 }
 
-.blogpostFrame div.author {
-  font-size: min(3.6vw, 18px);
+.blogpostFrame span.author {
   color: rgba(0, 50, 0, 0.8); 
   margin-bottom: 40px;
-}
-
-.blogpostImage img,
-.blogpostImage video,
-.blogpostImage audio {
-  max-height: 50vh;
-  max-width: 100%;
 }
 
 .blogHeader .fileDisplayContainer img,
@@ -84,6 +87,7 @@
   font-weight: 450;
   text-align: center;
   color:  black;
+  margin-bottom: 20px;
 }
 
 .author span {

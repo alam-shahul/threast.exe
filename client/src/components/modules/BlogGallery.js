@@ -75,9 +75,6 @@ function BlogGallery(props) {
   }
 
   if(!gallery) {
-    console.log(gallery);
-    console.log(props.user);
-  
     fetchGallery().then((gallerySnapshot) => {
       console.log(gallerySnapshot.docs)
       isNextAvailable(gallerySnapshot.docs[gallerySnapshot.docs.length - 1]);
@@ -85,8 +82,6 @@ function BlogGallery(props) {
       setCurrentPage(0);
     });
   }
-
-  console.log(gallery);
 
   return (
     <>
@@ -97,18 +92,22 @@ function BlogGallery(props) {
               <div className="galleryTitle">
                 {props.title}
               </div>
-              <div className="buttonContainer">
-                { (currentPage != 0) ?
-                  <span className="previousButton" onClick={e => populatePrevious()}>←</span>
-                  :
-                  <></>
-                }
-                { (nextAvailable) ?
-                  <span className="nextButton" onClick={e => populateNext()}>→</span>
-                  :
-                  <></>
-                }
-              </div>
+              { nextAvailable ?
+                <div className="buttonContainer">
+                  { (currentPage != 0) ?
+                    <span className="previousButton" onClick={e => populatePrevious()}>←</span>
+                    :
+                    <></>
+                  }
+                  { (nextAvailable) ?
+                    <span className="nextButton" onClick={e => populateNext()}>→</span>
+                    :
+                    <></>
+                  }
+                </div>
+                :
+                <></>
+              }
               { gallery.length > 0 ?
                 ( 
                   <div className="gallery">

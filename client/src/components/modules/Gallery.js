@@ -97,18 +97,22 @@ function Gallery(props) {
               <div className="galleryTitle">
                 {props.title}
               </div>
-              <div className="buttonContainer">
-                { (currentPage != 0) ?
-                  <span className="previousButton" onClick={e => populatePrevious()}>←</span>
-                  :
-                  <></>
-                }
-                { (nextAvailable) ?
-                  <span className="nextButton" onClick={e => populateNext()}>→</span>
-                  :
-                  <></>
-                }
-              </div>
+              { nextAvailable ?
+                <div className="buttonContainer">
+                  { (currentPage != 0) ?
+                    <span className="previousButton" onClick={e => populatePrevious()}>←</span>
+                    :
+                    <></>
+                  }
+                  { (nextAvailable) ?
+                    <span className="nextButton" onClick={e => populateNext()}>→</span>
+                    :
+                    <></>
+                  }
+                </div>
+                :
+                <></>
+              }
               { gallery.length > 0 ?
                 ( 
                   <StackGrid
