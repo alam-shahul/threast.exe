@@ -47,7 +47,11 @@ function BlogpostViewer(props) {
   }
 
   function renderImage(props) {
-    return <img {...props} style={{maxWidth: '100%'}} />
+    return (
+      <div style={{textAlign: "center"}}>
+        <img {...props} style={{maxWidth: '100%'}} />
+      </div>
+    )
   }
 
   return (

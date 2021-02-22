@@ -56,14 +56,14 @@
 }
 
 .blogpostImage {
-  height: min(100px, 20vw);
-  width: min(100px, 20vw);
+  height: min(125px, 20vw);
+  width: min(125px, 20vw);
   background-color: black;
 }
 
 .blogpostImage img {
-  height: min(100px, 20vw);
-  width: min(100px, 20vw);
+  height: min(125px, 20vw);
+  width: min(125px, 20vw);
   object-fit: contain;
 }
 
