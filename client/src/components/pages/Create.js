@@ -68,6 +68,7 @@ function Create(props) {
         title: title,
         tagline: tagline,
         thumbnailURL: null,
+        content: "",
         ownerName: props.user.displayName,
         ownerId: props.user.uid,
         profileId: props.user.profileId,
@@ -130,7 +131,7 @@ function Create(props) {
             <div className="formField">
               <label>
                 <div className="u-bold">Tagline</div>
-                <TextareaAutosize required className="" onChange={updateTagline} value={description}/>
+                <TextareaAutosize required className="" onChange={updateTagline} value={tagline}/>
                 <div>
                   <small className="">A tagline for your blogpost.</small>
                 </div>

@@ -117,6 +117,7 @@ form {
   }
 }
 
-a {
+a, a:-webkit-any-link {
   text-decoration: none;
+  color: inherit;
 }

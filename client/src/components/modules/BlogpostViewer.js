@@ -14,9 +14,24 @@ import math from 'remark-math';
 import default_thumbnail from "../../public/images/underConstruction.gif";
 import { FileDisplay, FileProcessor } from "./FileProcessor.js";
 import CommentSection from "./CommentSection.js";
+import ContributionInfo from "./ContributionInfo.js";
 
 function BlogpostViewer(props) {
-  console.log(props);
+  const [photoURL, setPhotoURL] = useState("");
+ 
+  useEffect(() => {
+    firestore
+    .collection("profiles")
+    .doc(props.blogpost.profileId)
+    .onSnapshot(profileSnapshot => {
+      const profile = profileSnapshot.data();
+      if (profile) {
+        console.log(profile);
+        setPhotoURL(profile.photoURL);
+      }
+    })
+  }, [props.blogpost])
+
   function renderParagraph(props) {
     const { children } = props;
   
@@ -42,9 +57,7 @@ function BlogpostViewer(props) {
           <div className="title">{props.blogpost.title}</div>
           <div className="tagline">{props.blogpost.tagline}</div>
           <div className="author">
-            <Link to={"/people?id=" + props.blogpost.profileId}>
-              {props.blogpost.ownerName}
-            </Link>
+            <ContributionInfo ownerId={props.blogpost.profileId} contributionTime={props.blogpost.lastUpdated} ownerName={props.blogpost.ownerName} photoURL={photoURL} format={"MMM DD, YYYY"}/>
           </div>
           <FileDisplay type="image" URL={props.blogpost.thumbnailURL || default_thumbnail}/>
         </div>

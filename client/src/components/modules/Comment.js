@@ -1,22 +1,11 @@
 import React, { useState } from "react";
 import CommentForm from "./CommentForm.js";
-import dayjs from "dayjs";
-import { Link, Redirect } from "react-router-dom";
+import ContributionInfo from "./ContributionInfo.js";
 
 function SingleComment(props) {
-  const firstPosted = dayjs(props.comment.firstPosted.toDate()).format("MMM DD, YYYY h:mm A");
   return (
     <div className="comment">
-      <div className="commentInfo">
-        <Link to={"/people?id=" + props.comment.ownerId}>
-          <img
-            className="profileIcon"
-            src={props.photoURL}
-            alt="囧"
-          />
-        </Link>
-        <span className="commentAuthor">{props.comment.ownerName}</span> • <span>{firstPosted}</span>
-      </div>
+      <ContributionInfo ownerId={props.comment.ownerId} contributionTime={props.comment.firstPosted} ownerName={props.comment.ownerName} photoURL={props.photoURL} format={"MMM DD, YYYY h:mm A"}/>
       <div>{props.comment.content}</div>
     </div>
   )
