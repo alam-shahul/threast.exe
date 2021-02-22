@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 
 function ContributionInfo(props) {
-  const contributionDate = dayjs(props.contributionTime.toDate()).format(props.format);
+  const contributionDate = dayjs(props.contributionDate).format(props.format);
   return (
         <div className="commentInfo">
           <Link to={"/people?id=" + props.ownerId}>

@@ -5,7 +5,7 @@ import ContributionInfo from "./ContributionInfo.js";
 function SingleComment(props) {
   return (
     <div className="comment">
-      <ContributionInfo ownerId={props.comment.ownerId} contributionTime={props.comment.firstPosted} ownerName={props.comment.ownerName} photoURL={props.photoURL} format={"MMM DD, YYYY h:mm A"}/>
+      <ContributionInfo ownerId={props.comment.ownerId} contributionDate={props.comment.firstPosted.toDate()} ownerName={props.comment.ownerName} photoURL={props.photoURL} format={"MMM DD, YYYY h:mm A"}/>
       <div>{props.comment.content}</div>
     </div>
   )

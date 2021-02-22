@@ -43,7 +43,7 @@ function BlogThumbnail(props) {
       </div>
       <div className="blogpostFrame">
         <div className="blogpostFrameText">
-          <ContributionInfo ownerId={props.blogpost.profileId} contributionTime={props.blogpost.lastUpdated} ownerName={props.blogpost.ownerName} photoURL={photoURL} format={"MMM DD, YYYY"}/>
+          <ContributionInfo ownerId={props.blogpost.profileId} contributionDate={props.blogpost.lastUpdated.toDate()} ownerName={props.blogpost.ownerName} photoURL={photoURL} format={"MMM DD, YYYY"}/>
           <div className="title">{props.blogpost.title}</div>
           { props.blogpost.tagline ?
             <div className="tagline">{props.blogpost.tagline}</div>

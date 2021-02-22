@@ -139,9 +139,10 @@ function BlogpostEditor(props) {
       profileId: props.blogpost.profileId,
       visibility: visibility
     };
-    setSavedBlog(data);
+    let mockData = Object.assign({}, data, {lastUpdated: firebase.firestore.Timestamp.now()});     
+    setSavedBlog(mockData);
     let blog = blogRef.set(data)
-      .then(blogSnapshot => {
+      .then(()=> {
         console.log("Blog saved.");
         setDataStatus("saved");
       });

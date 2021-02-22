@@ -18,7 +18,7 @@ import ContributionInfo from "./ContributionInfo.js";
 
 function BlogpostViewer(props) {
   const [photoURL, setPhotoURL] = useState("");
- 
+
   useEffect(() => {
     firestore
     .collection("profiles")
@@ -26,7 +26,6 @@ function BlogpostViewer(props) {
     .onSnapshot(profileSnapshot => {
       const profile = profileSnapshot.data();
       if (profile) {
-        console.log(profile);
         setPhotoURL(profile.photoURL);
       }
     })
@@ -61,7 +60,7 @@ function BlogpostViewer(props) {
           <div className="title">{props.blogpost.title}</div>
           <div className="tagline">{props.blogpost.tagline}</div>
           <div className="author">
-            <ContributionInfo ownerId={props.blogpost.profileId} contributionTime={props.blogpost.lastUpdated} ownerName={props.blogpost.ownerName} photoURL={photoURL} format={"MMM DD, YYYY"}/>
+            <ContributionInfo ownerId={props.blogpost.profileId} contributionDate={props.blogpost.lastUpdated.toDate()} ownerName={props.blogpost.ownerName} photoURL={photoURL} format={"MMM DD, YYYY h:mm A"}/>
           </div>
           <FileDisplay type="image" URL={props.blogpost.thumbnailURL || default_thumbnail}/>
         </div>
