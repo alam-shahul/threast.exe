@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
 import Gallery from "../modules/Gallery.js";
+import BlogGallery from "../modules/BlogGallery.js";
 import "../../public/stylesheets/Profile.css";
 
 function Profile(props) {
@@ -24,7 +25,10 @@ function Profile(props) {
                  }
                </div>
                { props.profile ?
-                 <Gallery startQuery={props.startQuery} title={`${props.profile.displayName}'s Art`}/>      
+                 <>
+                   <Gallery startQuery={props.artStartQuery} title={`${props.profile.displayName}'s Art`}/>      
+                   <BlogGallery startQuery={props.blogStartQuery} title={`${props.profile.displayName}'s Blogposts`}/>
+                 </>      
                  :
                  <></>
                }

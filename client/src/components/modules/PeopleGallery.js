@@ -35,7 +35,7 @@ function PeopleGallery(props) {
             <span>Class of </span>
             <select value={selectedClass} onChange={changeClass}>
               { uniqueClasses.map((classOption) =>
-                  (<option value={classOption}>{classOption}</option>)
+                  (<option key={classOption} value={classOption}>{classOption}</option>)
                 )
               }
             </select>

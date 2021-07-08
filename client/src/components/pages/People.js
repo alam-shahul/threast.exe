@@ -48,14 +48,20 @@ function People(props) {
   }
   
   if (id) {
-    let startQuery = firestore.collection("art")
+    let artStartQuery = firestore.collection("art")
       .orderBy("lastUpdated", "desc")
       .where("profileId", "==", id);
 
-    if (!props.user)
-      startQuery = startQuery.where("visibility", "==", "public");
+    let blogStartQuery = firestore.collection("blogs")
+      .orderBy("lastUpdated", "desc")
+      .where("profileId", "==", id);
 
-    return ( <Profile profile={profile} startQuery={startQuery}/> );
+    if (!props.user) {
+      artStartQuery = artStartQuery.where("visibility", "==", "public");
+      blogStartQuery = blogStartQuery.where("visibility", "==", "public");
+    }
+
+    return ( <Profile profile={profile} artStartQuery={artStartQuery} blogStartQuery={blogStartQuery} /> );
   }
   else
     if (peopleGallery)

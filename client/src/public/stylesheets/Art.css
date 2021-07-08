@@ -28,6 +28,7 @@
 
 .polaroidImage img{
   display: block;
+  margin-bottom: 20px;
   max-width: 100%;
 }
 
@@ -50,7 +51,7 @@
   width: 100%;
 }
 
-.title {
+.polaroidFrame div.title, .artworkText div.title {
   font-size: 20px;
   font-family: "Merienda One", cursive;
   text-align: center;
@@ -58,23 +59,22 @@
   margin: 20px;
 }
 
-.galleryTitle {
+.artContainer .galleryTitle {
   font-size: min(8vw, 40px);
   font-family: "Merienda One", cursive;
   text-align: center;
   color:  black;
-  margin: 10px 0 10px 0;
+  margin-bottom: 20px;
 }
-
 
 .description {
   font-size: 14px;
   text-align: center;
   color:  grey;
-  margin: 0 20px 20px 20px;
+  margin-bottom: 20px;
 }
 
-.author {
+.artworkText .author {
   font-size: 14px;
   text-align: center;
   color:  grey;
@@ -85,8 +85,8 @@
   white-space: pre;
 }
 
-.gallery {
-  margin: 20px 0 20px 0;
+.artContainer .gallery {
+  margin: 0 -20px 20px -20px;
   display: flex;
   justify-content: flex-end;
 }
@@ -97,6 +97,7 @@
   background-size: 600px;
   flex-grow: 1;
   min-height: 100%;
+  padding: 20px;
 }
 
 .buttonContainer {
@@ -108,7 +109,7 @@
   display: inline-block;
   width: 1em;
   height: 1em;
-  padding: 0.75em;
+  padding: 0.5em;
   margin: 0.2em;
   line-height: 1em;
   font-size: 25px;
@@ -132,11 +133,10 @@
 }
 
 .artworkContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 20px;
 }
+
+
 
 .artworkEditor .formField {
   margin-bottom: 20px;

@@ -19,6 +19,7 @@
 const path = require("path");
 const entryFile = path.resolve(__dirname, "client", "src", "index.js");
 const outputDir = path.resolve(__dirname, "client", "dist");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin")
 
 const webpack = require("webpack");
 
@@ -29,7 +30,7 @@ module.exports = {
     publicPath: "/",
     filename: "bundle.js",
   },
-  devtool: "nosources-source-map",
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -69,7 +70,12 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new MonacoWebpackPlugin({
+      languages: ['markdown', 'json']
+    })
+  ],
   devServer: {
     historyApiFallback: true,
     contentBase: "./client/dist",

@@ -116,3 +116,7 @@ form {
     height: calc(100vh - var(--navbar-height-desktop));
   }
 }
+
+a {
+  text-decoration: none;
+}

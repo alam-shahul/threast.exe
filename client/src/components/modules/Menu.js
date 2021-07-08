@@ -6,6 +6,7 @@ export function Links(props) {
            <>
              <Link to="/art" onClick={props.handleClick}>Art</Link>
              <Link to="/people" onClick={props.handleClick}>People</Link>
+             <Link to="/blog" onClick={props.handleClick}>Blogs</Link>
              { (props.isLoggedIn) ?
                (
                  <>
