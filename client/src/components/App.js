@@ -7,6 +7,7 @@ import Create from "./pages/Create.js";
 import People from "./pages/People.js";
 import Account from "./pages/Account.js";
 import Navbar from "./Navbar.js";
+import Blog from "./pages/Blog.js";
 
 import "../utilities.css";
 
@@ -112,6 +113,13 @@ function App(props) {
 	          user={user}
 	          isVerified={isVerified}
 	          isWhitelisted={isWhitelisted}
+            />
+          </Route>
+          <Route path="/blog">
+            <Blog
+            user={user}
+            isVerified={isVerified}
+            isWhitelisted={isWhitelisted}
             />
           </Route>
 	      <NotFound default />

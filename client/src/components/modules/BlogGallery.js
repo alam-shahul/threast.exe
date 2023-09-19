@@ -5,11 +5,10 @@ const { scaleDown } = transitions;
 
 import { firebase } from '@firebase/app';
 
-import ArtThumbnail from "./ArtThumbnail.js";
-import "../../public/stylesheets/Art.css";
+import BlogThumbnail from "./BlogThumbnail.js";
 import Loading from "./Loading.js";
 
-function Gallery(props) {
+function BlogGallery(props) {
   //const [mode, setMode] = useState(null);
   const pageSize = 16;
 
@@ -76,21 +75,17 @@ function Gallery(props) {
   }
 
   if(!gallery) {
-    console.log(gallery);
-    console.log(props.user);
-  
     fetchGallery().then((gallerySnapshot) => {
+      console.log(gallerySnapshot.docs)
       isNextAvailable(gallerySnapshot.docs[gallerySnapshot.docs.length - 1]);
       setGallery(gallerySnapshot.docs);
       setCurrentPage(0);
     });
   }
 
-  console.log(gallery);
-
   return (
     <>
-      <div className="artContainer">
+      <div className="blogContainer">
         { gallery ?
           (
             <>
@@ -115,41 +110,28 @@ function Gallery(props) {
               }
               { gallery.length > 0 ?
                 ( 
-                  <StackGrid
-                    appear={scaleDown.appear}
-                    appearDelay={50}
-                    appeared={scaleDown.appeared}
-                    enter={scaleDown.enter}
-                    entered={scaleDown.entered}
-                    leaved={scaleDown.leaved}
-                    monitorImagesLoaded={true}
-                    horizontal={false}
-                    columnWidth={300}
-                    gutterWidth={15}
-                    gutterHeight={15}
-                    className="gallery"
-                  >
+                  <div className="gallery">
                     { gallery ?
-                      gallery.map((artworkSnapshot) => {
-                        const artwork = artworkSnapshot.data();
+                      gallery.map((blogpostSnapshot) => {
+                        const blogpost = blogpostSnapshot.data();
                         return <Link
                                  style={{textDecoration: 'none'}}
-                                 key={artworkSnapshot.id}
-                                 to={"/art?id=" + artworkSnapshot.id}  
+                                 key={blogpostSnapshot.id}
+                                 to={"/blog?id=" + blogpostSnapshot.id}  
                                >
-                                 <ArtThumbnail
-                                    key={artworkSnapshot.id}
-                                    artwork={artwork}
+                                 <BlogThumbnail
+                                    key={blogpostSnapshot.id}
+                                    blogpost={blogpost}
                                  />
                                </Link>
                         })
                       :
                       <></>
                     }
-                  </StackGrid>
+                  </div>
                 )
                 :
-                <div>No artworks!</div>
+                <div>No blogposts!</div>
               }
             </>
           )
@@ -161,4 +143,4 @@ function Gallery(props) {
   );
 }
 
-export default Gallery;
+export default BlogGallery;
