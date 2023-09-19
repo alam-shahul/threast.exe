@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "analyze": "source-map-explorer 'client/dist/bundle.js'",
-    "hotloader": "webpack-dev-server --config ./webpack.config.js --mode development --port 5000",
+    "hotloader": "webpack-dev-server --config ./webpack.config.js --mode development --port 5050",
     "start": "nodemon",
     "build": "webpack --mode production"
   },
@@ -58,6 +58,7 @@
     "react-monaco-editor": "^0.41.2",
     "react-router-dom": "^5.2.0",
     "react-stack-grid": "^0.7.1",
+    "react-syntax-highlighter": "^15.4.3",
     "remark-gfm": "^1.0.0",
     "remark-images": "^2.0.0",
     "remark-math": "^4.0.0",

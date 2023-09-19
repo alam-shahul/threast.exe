@@ -7,9 +7,11 @@ import gfm from 'remark-gfm';
 import Tex from '@matejmazur/react-katex';
 import 'katex/dist/katex.min.css';
 import math from 'remark-math';
-
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {vscDarkPlus} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import MarkdownEditor from './MarkdownEditor.js';
+import MarkdownViewer from './MarkdownViewer.js';
 
 import { firebase } from '@firebase/app';
 import { auth, firestore, storage} from "../../firebaseClient";
@@ -174,7 +176,7 @@ function BlogpostEditor(props) {
    
     if (thumbnailURL)
       deleteMediaByURL(thumbnailURL);
- 
+
     // Delete the file
     setDataStatus("deleting");
     blogRef.delete().then(function() {
@@ -186,6 +188,21 @@ function BlogpostEditor(props) {
       // Uh-oh, an error occurred!
       console.log(error);
     }); 
+
+    // Delete all comments belonging to blogpost. 
+    firestore
+      .collection("comments")
+      .where("parentId", "==", props.id)
+      .get().then(snapshot => {
+        let batch = firestore.batch();
+        snapshot.forEach(comment => {
+          batch.delete(comment.ref);
+        });
+
+        return batch.commit();
+      }).then(() => {
+        console.log("All comments deleted!");
+    });
   } 
 
   function BlogpostStatus() {
@@ -267,18 +284,7 @@ function BlogpostEditor(props) {
                 />
               </div>
               <div className="monacoPreview">
-                <ReactMarkdown
-                  plugins={[gfm, math]}
-                  children={content}
-                  renderers={{
-                    paragraph: renderParagraph,
-                    image: renderImage,
-                    inlineMath: ({value}) => <Tex math={value} />,
-                    math: ({value}) => <Tex block math={value} />
-                  }}
-                  skipHtml={false}
-                  escapeHtml={true}
-                />
+                <MarkdownViewer content={content} />
               </div>
             </div>
           </label>
@@ -289,7 +295,7 @@ function BlogpostEditor(props) {
           <BlogpostStatus/>
         </div>
         <div className="u-bold">Blogpost Preview</div>
-        <BlogpostViewer id={props.id} blogpost={savedBlog}/>
+        <BlogpostViewer id={props.id} user={props.user} blogpost={savedBlog}/>
         { redirect ?
           <Redirect to={redirect}/>
           :

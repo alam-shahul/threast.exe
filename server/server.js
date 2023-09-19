@@ -35,9 +35,7 @@ const socket = require("./server-socket");
 
 const firebase = require("./firebaseAdmin");
 
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-
+const monitorAndEmail = require("./emailer");
 
 //// Server configuration below
 //// TODO change connection URL after setting up your team database
@@ -102,7 +100,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-setInterval(sendEmail, 3600000);
+const millisecondsPerHour = 3600000;
+
+setInterval(monitorAndEmail, millisecondsPerHour);
 
 // hardcode port to 3000 for now
 const port = 3000;
@@ -112,33 +112,3 @@ socket.init(server);
 server.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
-
-
-function sendEmail() {
-
-  let updateTime = new Date();
-  updateTime.setHours(updateTime.getHours() - 1)
-  firebase.firestore.collection("art").where("lastUpdated", ">=", updateTime).get().then((newArtworks) => {
-    console.log("Query results")
-    if (newArtworks.docs.length != 0) {
-      const msg = {
-        to: 'pkrishna@mit.edu', // Change to your recipient
-        from: 'dtr-webmasters@mit.edu', // Change to your verified sender
-        subject: 'Sending with SendGrid is Fun',
-        text: updateTime.getHours() + ':' + updateTime.getMinutes() + ':' + updateTime.getSeconds(),
-        html: updateTime.getHours() + ':' + updateTime.getMinutes() + ':' + updateTime.getSeconds()
-      }
-      sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent')
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-    }
-  })
-  .catch((error) => {
-      console.log("We ran out of reuests for today.")
-  })
-}

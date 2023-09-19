@@ -10,7 +10,6 @@ import BlogpostViewer from "./BlogpostViewer.js";
 
 function Blogpost(props) {
   const isOwner = (props.user && props.blogpost.ownerId === props.user.uid); 
-  const [comments, setComments] = useState(null);
 
   return (
     <>
