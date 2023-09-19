@@ -1,14 +1,14 @@
-.artworkCreator .formField {
+.mediaCreator .formField {
   margin-bottom: 20px;
   width: 100%;
 }
 
-.artworkCreator .formField input,
-.artworkCreator .formField textarea {
+.mediaCreator .formField input,
+.mediaCreator .formField textarea {
   width: 75%;
 }
 
-.artworkCreator {
+.mediaCreator {
   display:flex;
   flex-direction: column;
   justify-content: center;
